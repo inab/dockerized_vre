@@ -1,0 +1,7 @@
+php-httpd:
+    image: php:7.3-apache
+    ports:
+        - 80:80
+    volumes:
+        - "./DocumentRoot:/home/user/openvre/public/"
+        - "./.htaccess:/home/user/openvre/public/.htaccess"
