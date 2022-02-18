@@ -4,7 +4,7 @@
 require "/var/www/html/openVRE/config/globals.inc.php";
 
 // import vendor libs
-require dirname(__FILE__)."/vendor/autoload.php"; 
+require "/var/www/html/openVRE/vendor/autoload.php"; 
 
 // initialize session
 require "/var/www/html/openVRE/public/phplib/session.inc";

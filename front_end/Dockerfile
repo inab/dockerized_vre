@@ -2,11 +2,8 @@
 #FROM php:7.4-cli
 #FROM php:7-apache
 #FROM ubuntu:latest
-FROM php:7.3-fpm
 
-#RUN apk update && \
-#    apk upgrade && \
-#    apk add git
+FROM php:7.4-fpm
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
@@ -23,7 +20,7 @@ RUN apt-get install -y \
         libpng-dev
 
 RUN apt-get update && apt-get install -y libmcrypt-dev \ 
-    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
     && docker-php-ext-install gd
 
 
@@ -41,6 +38,7 @@ RUN apt-get update && apt-get install -y libmcrypt-dev \
 #&& echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/ext-mongodb.ini
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+#RUN composer install --ignore-platform-reqs
 
 WORKDIR /var/www/html
 #RUN git clone https://github.com/inab/openVRE.git
