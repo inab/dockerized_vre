@@ -1,123 +1,24 @@
-version: '2'
+version: "2.4"
+services:
 
-services:        
-
-### Front_end Container #######################################
   front_end:
-    build: './front_end/' 
-    volumes_from:
-      - volumes_source
-      - shared_data
-    depends_on:
-      - my-mongodb
-    links:
-      - keycloak
-      - my-mongodb
-        
-### MongoDB Container #######################################
-  my-mongodb:
-    image: mongo:4.2.3-bionic
-    container_name: my-mongodb
-    ports:
-      - 27017:27017
-    environment:
-      - MONGO_SERVER=my-mongodb
-      - MONGO_INITDB_DATABASE=open-vre
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=admin
-    volumes_from:
-      - volumes_data
-        # links:
-            #   - keycloak
+    build: './front_end/'
+    volumes:
+      - data-volume:/var/www/html/
+      - ./config:/var/www/html/openVRE/config
 
-### Web-server Container #######################################
   apache2:
     build: './apache/'
-    
     ports:
-            - "8088:80"
-    volumes_from:
-      - volumes_source
-    links:
-      - keycloak
-
-### Keycloak Container #######################################
-  postgres:
-      image: postgres
-      environment:
-        POSTGRES_DB: keycloak #${POSTGRES_DB}
-        POSTGRES_USER: keycloak #${POSTGRES_USER}
-        POSTGRES_PASSWORD: keycloak #${POSTGRES_PASSWORD}
-      networks:
-        dac-network:
-          ipv4_address: 172.21.0.13
-  keycloak:
-      image: quay.io/keycloak/keycloak:latest
-      environment:
-        DB_VENDOR: POSTGRES #${DB_VENDOR}
-        DB_ADDR: postgres #${DB_ADDR}
-        DB_DATABASE: keycloak #${DB_DATABASE}
-        DB_USER: keycloak #${DB_USER}
-        DB_SCHEMA: public #${DB_SCHEMA}
-        DB_PASSWORD: password #${DB_PASSWORD}
-        KEYCLOAK_USER: admin #${KEYCLOAK_USER}
-        KEYCLOAK_PASSWORD: password #${KEYCLOAK_PASSWORD}
-        #KEYCLOAK_FRONTEND_URL: http://localhost:8080/auth
-        #volumes:
-              # - "./ipc-test-data/keycloak/realms:/opt/jboss/keycloak/imports"
-              #no cal - "./ipc-plugins/keycloak:/opt/jboss/keycloak/standalone/deployments"
-      command:
-        - '-b 0.0.0.0 -Dkeycloak.profile.feature.upload_scripts=enabled -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/opt/jboss/keycloak/imports/realm-export.json -Dkeycloak.migration.strategy=IGNORE_EXISTING'
-      ports:
-        - 8080:8080
-      links:
-        - my-mongodb
-      networks:
-        dac-network:
-          ipv4_address: 172.21.0.12
+      - "8088:80"
+    volumes:
+      - data-volume:/var/www/html/
+      - ./config:/var/www/html/openVRE/config
 
 
-### Application Code Container ######################
-
-  volumes_source:
-        image: tianon/true
-        volumes:
-            - ./front_end:/var/www/
-                # - ./php/src:/var/www/html/
-                #- ./public
-
-### Databases Data Container ################################
-
-  volumes_data:
-        image: tianon/true
-        volumes:
-            # seeding scripts
-            #- ./mongo-entrypoint:/docker-entrypoint-initdb.d
-            # named volumes
-            #- ./mongoconfig:/data/configdb
-            - ./mongodb:/openvre/data/db
-
-### User info Container ################################
-
-  shared_data:
-        image: tianon/true
-        volumes: 
-            - ./shared_data:/openvre/data/shared_data
-
-### Config files Container ################################
-        
-  config_data_folder:
-        image: tianon/true
-        environment:
-           - 'CONF_FOLDER:/home/user/openvre/config'
-        volumes:
-           - /home/user/openvre/config:/openvre/config #                # - ${CONF_FOLDER}:/openvre/config
-
-networks:
-  dac-network:
-    ipam:
-      config:
-        - subnet: 172.21.0.0/24
-
-
-
+volumes:
+  data-volume:
+    
+          # config-volume:
+          #- ./config:/var/www/html/openVRE/config
+          
