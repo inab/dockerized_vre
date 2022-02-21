@@ -1,4 +1,4 @@
-FROM webdevops/php-apache:ubuntu-16.04
+FROM webdevops/php-apache:7.4
 #FROM php:7.2-apache
 
 #ENV WEB_PHP_SOCKET=$PHP_SOCKET

@@ -1,9 +1,5 @@
 # Dockerfile
-#FROM php:7.4-cli
-#FROM php:7-apache
-#FROM ubuntu:latest
-
-FROM php:7.4-fpm
+FROM php:7.4-apache
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
@@ -12,7 +8,6 @@ RUN pecl install mongodb
 RUN docker-php-ext-install bcmath
 RUN echo "extension=mongodb.so" >> /usr/local/etc/php/conf.d/mongodb.ini
 
-# Install Laravel dependencies
 RUN apt-get install -y \
         git libfreetype6-dev \
         libjpeg62-turbo-dev \
@@ -21,33 +16,20 @@ RUN apt-get install -y \
 
 RUN apt-get update && apt-get install -y libmcrypt-dev \ 
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
-    && docker-php-ext-install gd
+    && docker-php-ext-install gd 
 
-
-#RUN apt-get update && apt-get install -y && apt-get install -y git \
-#        libfreetype6-dev \
-#        libjpeg62-turbo-dev \
-#        libpng-dev \
-#    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-#    && docker-php-ext-install -j$(nproc) gd
-
-#RUN apt-get update && apt-get install -y zlib1g-dev libicu-dev g++ libssl-dev
-
-# Install mongo
-#RUN pecl install mongodb \
-#&& echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/ext-mongodb.ini
-
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-#RUN composer install --ignore-platform-reqs
+#COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 WORKDIR /var/www/html
 #RUN git clone https://github.com/inab/openVRE.git
 RUN git clone https://github.com/Socayna/openVRE.git
+RUN pwd
 RUN touch caca
 RUN cd openVRE
 WORKDIR /var/www/html/openVRE
-RUN composer update
-#RUN service apache2 restart
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN composer self-update
+RUN composer update --ignore-platform-req=ext-mongodb --ignore-platform-req=ext-mongodb
 RUN mkdir logs
 RUN touch logs/application.log
 RUN chown -R www-data:www-data  logs/application.log

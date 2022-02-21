@@ -5,7 +5,8 @@ services:
     build: './front_end/'
     volumes:
       - data-volume:/var/www/html/
-      - ./config:/var/www/html/openVRE/config
+      - "./config:/var/www/html/openVRE/config"
+  
 
   apache2:
     build: './apache/'
@@ -13,7 +14,7 @@ services:
       - "8088:80"
     volumes:
       - data-volume:/var/www/html/
-      - ./config:/var/www/html/openVRE/config
+      - "./config:/var/www/html/openVRE/config"
 
 
 volumes:
