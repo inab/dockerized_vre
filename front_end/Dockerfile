@@ -1,5 +1,5 @@
 # Dockerfile
-FROM php:7.4-apache
+FROM php:7.4-cli
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y libmcrypt-dev \
 #COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 WORKDIR /var/www/html
+RUN touch caca
 #RUN git clone https://github.com/inab/openVRE.git
 RUN git clone https://github.com/Socayna/openVRE.git
 RUN pwd

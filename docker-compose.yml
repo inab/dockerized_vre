@@ -5,8 +5,9 @@ services:
     build: './front_end/'
     volumes:
       - data-volume:/var/www/html/
-      - "./config:/var/www/html/openVRE/config"
-  
+      - ./config:/var/www/html/openVRE/config
+    links:
+      - my-mongodb
 
   apache2:
     build: './apache/'
@@ -14,8 +15,22 @@ services:
       - "8088:80"
     volumes:
       - data-volume:/var/www/html/
-      - "./config:/var/www/html/openVRE/config"
+      - ./config:/var/www/html/openVRE/config
 
+  my-mongodb:
+    image: mongo:4.2.3-bionic
+    container_name: my-mongodb
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_SERVER=my-mongodb
+      - MONGO_INITDB_DATABASE=open-vre
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - ./mongodb:/openVRE/data/db
+    # links:
+            #   - keycloak
 
 volumes:
   data-volume:
