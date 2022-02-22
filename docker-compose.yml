@@ -4,18 +4,12 @@ services:
   front_end:
     build: './front_end/'
     volumes:
-      - data-volume:/var/www/html/
+            #- data-volume:/var/www/html/
       - ./config:/var/www/html/openVRE/config
     links:
       - my-mongodb
-
-  apache2:
-    build: './apache/'
     ports:
       - "8088:80"
-    volumes:
-      - data-volume:/var/www/html/
-      - ./config:/var/www/html/openVRE/config
 
   my-mongodb:
     image: mongo:4.2.3-bionic
@@ -29,12 +23,8 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=admin
     volumes:
       - ./mongodb:/openVRE/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     # links:
             #   - keycloak
 
-volumes:
-  data-volume:
-    
-          # config-volume:
-          #- ./config:/var/www/html/openVRE/config
           
