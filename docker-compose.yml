@@ -1,6 +1,6 @@
 version: "2.4"
-services:
 
+services:
   front_end:
     build: './front_end/'
     volumes:
@@ -8,23 +8,67 @@ services:
       - ./config:/var/www/html/openVRE/config
     links:
       - my-mongodb
+      - keycloak
     ports:
       - "8088:80"
+    networks:
+      open-vre:
+         ipv4_address: 172.21.0.14
 
   my-mongodb:
-    image: mongo:4.2.3-bionic
+    image: mongo:4.4
     container_name: my-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+      MONGO_SERVER: ${MONGO_SERVER}
+      MONGO_INITDB_DATABASE: ${MONGO_DB}
     ports:
       - 27017:27017
-    environment:
-      - MONGO_SERVER=my-mongodb
-      - MONGO_INITDB_DATABASE=open-vre
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=admin
+    links:
+      - keycloak
     volumes:
       - ./mongodb:/openVRE/data/db
-      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-    # links:
-            #   - keycloak
+      - ./mongodb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+              open-vre:
+                      ipv4_address: 172.21.0.10
+  postgres:
+    image: postgres
+    environment:
+       POSTGRES_DB: ${POSTGRES_DB}
+       POSTGRES_USER: ${POSTGRES_USER}
+       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+              open-vre:
+                      ipv4_address: 172.21.0.13
+  
+  keycloak:
+    image: quay.io/keycloak/keycloak:15.0.2
+    environment:
+        DB_VENDOR: ${DB_VENDOR}
+        DB_ADDR: ${DB_ADDR}
+        DB_DATABASE: ${DB_DATABASE}
+        DB_USER: ${DB_USER}
+        DB_SCHEMA: ${DB_SCHEMA}
+        DB_PASSWORD: ${DB_PASSWORD}
+        KEYCLOAK_USER: ${KEYCLOAK_USER}
+        KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+        KEYCLOAK_FRONTEND_URL: http://localhost:8080/auth
+    volumes:
+        - "./keycloak/realms:/opt/jboss/keycloak/imports"
+    command:
+        - '-b 0.0.0.0 -Dkeycloak.profile.feature.upload_scripts=enabled -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/opt/jboss/keycloak/imports/realm-export.json -Dkeycloak.migration.strategy=IGNORE_EXISTING'
+    ports:
+        - 8089:8080
+    links:
+        - postgres
+    networks:
+              open-vre:
+                      ipv4_address: 172.21.0.12
 
-          
+networks:
+  open-vre:
+    ipam:
+      config:
+        - subnet: 172.21.0.0/24
