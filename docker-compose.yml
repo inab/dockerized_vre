@@ -1,21 +1,6 @@
 version: "2.4"
 
 services:
-  front_end:
-    build: './front_end/'
-    volumes:
-            #- data-volume:/var/www/html/
-      - ./volumes/config:/var/www/html/openVRE/config
-        #- ./volumes/shared_data:/shared_data
-    links:
-      - my-mongodb
-      - keycloak
-    ports:
-      - "8088:80"
-    networks:
-      open-vre:
-         ipv4_address: 172.21.0.14
-
   my-mongodb:
     image: mongo:4.4
     container_name: my-mongodb
@@ -33,10 +18,30 @@ services:
     volumes:
       - ./mongodb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - ./volumes/mongo_data:/data/db
-        # - ./mongodb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     networks:
               open-vre:
-                      ipv4_address: 172.21.0.10
+                      ipv4_address: 172.21.0.10  
+
+  mongo_seed:
+    build: ./mongo-seed
+    depends_on:
+      - my-mongodb
+
+  front_end:
+    build: './front_end/'
+    volumes:
+      - ./volumes/config:/var/www/html/openVRE/config
+      - ./volumes/shared_data:/shared_data
+    links:
+      - my-mongodb
+      - keycloak
+    ports:
+      - "8088:80"
+    networks:
+      open-vre:
+         ipv4_address: 172.21.0.14
+
+   
   postgres:
     image: postgres
     environment:

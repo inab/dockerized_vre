@@ -1,7 +1,11 @@
+
+dbCollectionName = "vre-collection";
+
+
 db.createUser(
         {
-            user: "admin",
-            pwd: "admin",
+            user: ${MONGO_ADMIN},
+            pwd: ${MONGO_ADMIN_PASS},
             roles: [
                 {
                     role: "dbOwner",
@@ -10,8 +14,8 @@ db.createUser(
             ]
         },
 	{
-	   user: "user",
-	   pwd: "password",
+	   user: ${MONGO_USER} ,
+	   pwd: ${MONGO_PASS},
 	   roles: [
 		{
 		    role: "readWrite",
@@ -21,3 +25,6 @@ db.createUser(
 
 	}
 );
+
+db.createCollection(dbCollectionName);
+
