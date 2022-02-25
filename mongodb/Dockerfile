@@ -16,7 +16,7 @@ RUN \
   rm -rf /var/lib/apt/lists/*
 
 # Define mountable directories.
-VOLUME ["/data/db"]
+#VOLUME ["/data/db"]
 
 # Define working directory.
 WORKDIR /data
@@ -31,7 +31,7 @@ EXPOSE 27017
 EXPOSE 28017
 
 
-RUN for f in openvre/install/database/*.json; do mongoimport --host myServer --db mongodb -u myAdmin -p myPassword --authenticationDatabase admin $f; done
+RUN for f in openvre/install/database/*.json; do mongoimport --host my-mongodb --db open-vre -u ${MONGO_ADMIN} -p ${MONGO_ADMIN_PASS} --authenticationDatabase admin $f; done
 
 
 

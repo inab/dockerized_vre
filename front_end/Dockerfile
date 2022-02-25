@@ -37,8 +37,15 @@ RUN mkdir logs
 RUN touch logs/application.log
 RUN chown -R www-data:www-data  logs/application.log
 RUN pwd
-RUN mkdir -p /data/shared_data
-RUN cp -r install/data/* /data/shared_data/
+RUN cp logs/application.log /var/www/html/openVRE/config
+
+#VOLUME ["/shared_data"]
+#RUN mkdir /shared_data
+RUN pwd
+RUN mkdir -p /shared_data/public
+RUN cp -r -v install/data/* /shared_data/
+RUN chown -R  www-data:www-data /shared_data/
+
 RUN pwd
 RUN cd public
 
