@@ -3,6 +3,7 @@ FROM webdevops/php-apache:7.4
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
+RUN apt install -y nodejs
 RUN apt-get install -y autoconf pkg-config libssl-dev
 RUN docker-php-ext-install bcmath
 RUN echo "extension=mongodb.so" >> /usr/local/etc/php/conf.d/mongodb.ini
@@ -23,12 +24,10 @@ RUN add-apt-repository 'deb https://repo.mongodb.org/apt/debian buster/mongodb-o
 RUN apt-get update
 RUN apt-get install -y mongodb-org
 
-RUN mongo --version
-RUN mongoimport --version
-
 WORKDIR /var/www/html
-RUN git clone https://github.com/inab/openVRE.git
+#RUN git clone https://github.com/inab/openVRE.git
 #RUN git clone https://github.com/Socayna/openVRE.git
+RUN git clone --single-branch --branch dockerized https://github.com/inab/openVRE.git
 RUN pwd
 RUN cd openVRE
 WORKDIR /var/www/html/openVRE
@@ -39,11 +38,9 @@ RUN mkdir logs
 RUN touch logs/application.log
 RUN chown -R www-data:www-data  logs/application.log
 RUN pwd
-RUN cp logs/application.log /var/www/html/openVRE/config
 
-#VOLUME ["/shared_data"]
 RUN mkdir /shared_data
-RUN pwd
+RUN chmod -R 777 /shared_data
 RUN cp -r -v install/data/* /shared_data/
 RUN chown -R  www-data:www-data /shared_data/
 RUN pwd

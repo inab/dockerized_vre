@@ -6,8 +6,8 @@
 
 
 // Main config
-$GLOBALS['SERVER']    = "https://www.vre-test.com"; // domain 
-$GLOBALS['BASEURL']   = "/vre/"; // prefix url path. Set "/" for no prefix
+$GLOBALS['SERVER']    = "http://84.88.186.195:8088"; // domain 
+$GLOBALS['BASEURL']   = ""; // prefix url path. Set "/" for no prefix
 $GLOBALS['AppPrefix'] = "VRE-TEST"; // project url acronym
 $GLOBALS['NAME']      = "Project Name"; // project name 
 $GLOBALS['SITETITLE'] = "Project Name | Virtual Research Environment"; // site title
@@ -23,7 +23,7 @@ $GLOBALS['queueTask']  = "local.q"; //default queue
 
 // Mongo databases
 $GLOBALS['db_credentials'] = __DIR__."/mongo.conf"; // Mongo access 
-$GLOBALS['dbname_VRE']     = "open-vre"; // Database name
+$GLOBALS['dbname_VRE']     = "openVRE"; // Database name
 
 //VRE installation paths
 $GLOBALS['root']       = dirname(__DIR__); // VRE root directory

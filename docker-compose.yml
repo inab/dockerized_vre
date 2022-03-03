@@ -40,9 +40,13 @@ services:
 
   front_end:
     build: './front_end/'
+    environment:
+      fpm.pool.pm.max_requests: 1001
+      fpm.pool.user: www-data
+      fpm.pool.group: www-data 
     volumes:
       - ./volumes/config:/var/www/html/openVRE/config
-      - ./volumes/shared_data:/shared_data
+      - shared_data:/shared_data
     links:
       - my-mongodb
       - keycloak
@@ -95,3 +99,12 @@ networks:
     ipam:
       config:
         - subnet: 172.21.0.0/24
+
+volumes:
+  shared_data:
+    driver: local
+    driver_opts:
+       o: bind
+       type: none
+       device: /home/user/dockerized_vre/volumes/shared_data
+
