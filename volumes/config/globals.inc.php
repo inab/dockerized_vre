@@ -51,7 +51,7 @@ $GLOBALS['tool_io_dev_sample']  = $GLOBALS['root']."/install/data/tool_schemas/t
 // Oauth2 authentification
 $GLOBALS['auth_credentials']       = __DIR__."/oauth2.conf"; // oauth2 client credentials
 $GLOBALS['authAdmin_credentials']  = __DIR__."/oauth2_admin.conf"; // oauth2 client credentials with admin privileges
-$GLOBALS['authServer']             = 'https://auth.mydomain.come'; // external oauth2 server
+$GLOBALS['authServer']             = 'http://84.88.186.195:8089/auth'; // external oauth2 server
 $GLOBALS['authRealm']              = 'open-vre'; // keycloak realm
 $GLOBALS['urlAuthorize' ]          = $GLOBALS['authServer'].'/realms/'.$GLOBALS['authRealm'].'/protocol/openid-connect/auth';     //get autorization_code
 $GLOBALS['urlAccessToken']         = $GLOBALS['authServer'].'/realms/'.$GLOBALS['authRealm'].'/protocol/openid-connect/token';    //get token
@@ -67,7 +67,7 @@ $GLOBALS['adminRealm']             = $GLOBALS['authServer']."/admin/realms/".$GL
 
 // Default names and local path for VRE
 $GLOBALS['URL']       = $GLOBALS['SERVER'].$GLOBALS['BASEURL']; // full VRE URL 
-$GLOBALS['URL_login'] = $GLOBALS['URL']."/login.php"; // Default for auth server login
+$GLOBALS['URL_login'] = $GLOBALS['URL']."login.php"; // Default for auth server login
 $GLOBALS['htmlPath']  = $GLOBALS['root']. "/public/"; // Default path for public folder
 $GLOBALS['htmlib']    = $GLOBALS['htmlPath']."htmlib"; // Default path for html templates
 $GLOBALS['appsDir']   = $GLOBALS['shared']."apps/soft/"; // Default path for 3rd party soft in validation
