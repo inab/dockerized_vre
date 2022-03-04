@@ -7,7 +7,7 @@
 
 // Main config
 $GLOBALS['SERVER']    = "http://84.88.186.195:8088"; // domain 
-$GLOBALS['BASEURL']   = ""; // prefix url path. Set "/" for no prefix
+$GLOBALS['BASEURL']   = "/"; // prefix url path. Set "/" for no prefix
 $GLOBALS['AppPrefix'] = "VRE-TEST"; // project url acronym
 $GLOBALS['NAME']      = "Project Name"; // project name 
 $GLOBALS['SITETITLE'] = "Project Name | Virtual Research Environment"; // site title
@@ -52,7 +52,7 @@ $GLOBALS['tool_io_dev_sample']  = $GLOBALS['root']."/install/data/tool_schemas/t
 $GLOBALS['auth_credentials']       = __DIR__."/oauth2.conf"; // oauth2 client credentials
 $GLOBALS['authAdmin_credentials']  = __DIR__."/oauth2_admin.conf"; // oauth2 client credentials with admin privileges
 $GLOBALS['authServer']             = 'https://auth.mydomain.come'; // external oauth2 server
-$GLOBALS['authRealm']              = 'realmName'; // keycloak realm
+$GLOBALS['authRealm']              = 'open-vre'; // keycloak realm
 $GLOBALS['urlAuthorize' ]          = $GLOBALS['authServer'].'/realms/'.$GLOBALS['authRealm'].'/protocol/openid-connect/auth';     //get autorization_code
 $GLOBALS['urlAccessToken']         = $GLOBALS['authServer'].'/realms/'.$GLOBALS['authRealm'].'/protocol/openid-connect/token';    //get token
 $GLOBALS['urlResourceOwnerDetails']= $GLOBALS['authServer'].'/realms/'.$GLOBALS['authRealm'].'/protocol/openid-connect/userinfo'; //get user details

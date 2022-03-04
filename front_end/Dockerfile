@@ -37,13 +37,12 @@ RUN composer update --ignore-platform-req=ext-mongodb --ignore-platform-req=ext-
 RUN mkdir logs
 RUN touch logs/application.log
 RUN chown -R www-data:www-data  logs/application.log
-RUN pwd
 
-RUN mkdir /shared_data
-RUN chmod -R 777 /shared_data
-RUN cp -r -v install/data/* /shared_data/
-RUN chown -R  www-data:www-data /shared_data/
-RUN pwd
+#RUN mkdir /shared_data
+#RUN cp -r -v install/data/* /shared_data/
+#RUN chown -R  www-data:www-data /shared_data/
+#RUN chmod -R 777 /shared_data
+#RUN pwd
 RUN cd public
 
 #RUN for f in install/database/*.json; do mongoimport --host my-mongodb --db open-vre -u ${MONGO_ADMIN} -p ${MONGO_ADMIN_PASS} --authenticationDatabase admin $f; done
