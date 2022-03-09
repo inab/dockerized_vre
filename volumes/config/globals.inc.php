@@ -27,7 +27,7 @@ $GLOBALS['dbname_VRE']     = "openVRE"; // Database name
 
 //VRE installation paths
 $GLOBALS['root']       = dirname(__DIR__); // VRE root directory
-$GLOBALS['logFile']    = $GLOBALS['root']."/logs/VRE.log"; // Log file path 
+$GLOBALS['logFile']    = $GLOBALS['root']."/logs/application.log"; // Log file path 
 $GLOBALS['shared']     = "/shared_data/"; // VRE data directory
 $GLOBALS['dataDir']    = $GLOBALS['shared']."userdata/"; // User data directory
 $GLOBALS['pubDir']     = $GLOBALS['shared']."public/"; // Public data directory
@@ -52,7 +52,7 @@ $GLOBALS['tool_io_dev_sample']  = $GLOBALS['root']."/install/data/tool_schemas/t
 $GLOBALS['auth_credentials']       = __DIR__."/oauth2.conf"; // oauth2 client credentials
 $GLOBALS['authAdmin_credentials']  = __DIR__."/oauth2_admin.conf"; // oauth2 client credentials with admin privileges
 $GLOBALS['authServer']             = 'http://84.88.186.195:8089/auth'; // external oauth2 server
-$GLOBALS['authRealm']              = 'open-vre'; // keycloak realm
+$GLOBALS['authRealm']              = 'VRE'; // keycloak realm
 $GLOBALS['urlAuthorize' ]          = $GLOBALS['authServer'].'/realms/'.$GLOBALS['authRealm'].'/protocol/openid-connect/auth';     //get autorization_code
 $GLOBALS['urlAccessToken']         = $GLOBALS['authServer'].'/realms/'.$GLOBALS['authRealm'].'/protocol/openid-connect/token';    //get token
 $GLOBALS['urlResourceOwnerDetails']= $GLOBALS['authServer'].'/realms/'.$GLOBALS['authRealm'].'/protocol/openid-connect/userinfo'; //get user details

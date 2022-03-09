@@ -23,8 +23,7 @@ services:
     networks:
             dev:
             open-vre:
-                      ipv4_address: 172.21.0.10  
-
+                ipv4_address: 172.21.0.10
   mongo_seed:
     image: mongo
     links:
@@ -38,25 +37,6 @@ services:
       - dev
 
 
-  front_end:
-    build: './front_end/'
-    environment:
-      fpm.pool.pm.max_requests: 1001
-      fpm.pool.user: www-data
-      fpm.pool.group: www-data 
-    volumes:
-      - ./volumes/config:/var/www/html/openVRE/config
-      - shared_data:/shared_data
-    links:
-      - my-mongodb
-      - keycloak
-    ports:
-      - "8088:80"
-    networks:
-      open-vre:
-         ipv4_address: 172.21.0.14
-
-   
   postgres:
     image: postgres
     environment:
@@ -65,8 +45,8 @@ services:
        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     networks:
               open-vre:
-                      ipv4_address: 172.21.0.13
-  
+                 ipv4_address: 172.21.0.13 
+
   keycloak:
     image: quay.io/keycloak/keycloak:15.0.2
     environment:
@@ -82,23 +62,45 @@ services:
     volumes:
         - "./keycloak/realms:/opt/jboss/keycloak/imports"
     command:
-        - '-b 0.0.0.0 -Dkeycloak.profile.feature.upload_scripts=enabled -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/opt/jboss/keycloak/imports/realm-export.json -Dkeycloak.migration.strategy=IGNORE_EXISTING'
+            - '-b 0.0.0.0 -Dkeycloak.profile.feature.upload_scripts=enabled -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/opt/jboss/keycloak/imports/realm-export.json -Dkeycloak.migration.strategy=IGNORE_EXISTING'
     ports:
         - 8089:8080
     links:
         - postgres
     networks:
               open-vre:
-                      ipv4_address: 172.21.0.12
+                ipv4_address: 172.21.0.12
+
+  sge:
+    image: gawbul/docker-sge
+
+  front_end:
+    build: './front_end/'
+    environment:
+      fpm.pool.pm.max_requests: 1001
+      fpm.pool.user: www-data
+      fpm.pool.group: www-data
+    volumes:
+      - ./volumes/config:/var/www/html/openVRE/config
+      - shared_data:/shared_data
+    links:
+      - my-mongodb
+      - keycloak
+        #  - postgres
+    ports:
+      - "8088:80"
+    networks:
+              open-vre:
+                ipv4_address: 172.21.0.14
+
 
 networks:
   dev:
-    name: dev
     driver: bridge
   open-vre:
     ipam:
       config:
-        - subnet: 172.21.0.0/24
+            - subnet: 172.21.0.0/24
 
 volumes:
   shared_data:
