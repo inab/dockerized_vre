@@ -72,7 +72,19 @@ services:
                 ipv4_address: 172.21.0.12
 
   sge:
-    image: gawbul/docker-sge
+    build: ./sge/
+    volumes:
+      - ./sge:/sge
+    environment:
+      RUNUSER_USERNAME: docker
+      RUNUSER_UID: 1000
+      RUNUSER_GID: 100
+      RUNUSER_HOME: ./sge
+    command:
+      /usr/local/bin/setup_gridengine.sh
+    networks:
+      - open-vre
+
 
   front_end:
     build: './front_end/'

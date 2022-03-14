@@ -36,17 +36,14 @@ RUN composer self-update
 RUN composer update --ignore-platform-req=ext-mongodb --ignore-platform-req=ext-mongodb
 RUN mkdir logs
 RUN touch logs/application.log
-RUN chown -R www-data:www-data  logs/application.log
-
+#RUN chown -R www-data:www-data  logs/application.log
+RUN chmod -R 777 logs/application.log
 #RUN mkdir /shared_data
 #RUN cp -r -v install/data/* /shared_data/
 #RUN chown -R  www-data:www-data /shared_data/
 #RUN chmod -R 777 /shared_data
 #RUN pwd
 RUN cd public
-
-#RUN for f in install/database/*.json; do mongoimport --host my-mongodb --db open-vre -u ${MONGO_ADMIN} -p ${MONGO_ADMIN_PASS} --authenticationDatabase admin $f; done
-#RUN for f in install/database/*.json; do mongoimport --host my-mongodb --db open-vre --collection vre-collection $f; done
 
 
 ENV WEB_DOCUMENT_ROOT=/var/www/html/openVRE/public/
@@ -58,8 +55,6 @@ ENTRYPOINT ["/opt/docker/bin/entrypoint.sh"]
 
 CMD ["supervisord"]
 
-
-#CMD ["for f in install/database/*.json; do mongoimport --host my-mongodb  --db open-vre --collection vre-collection -u admin -p admin --authenticationDatabase admin $f; done"]
 
 #add cleaning step adjusting the document + sistema de cues
 #chmod u+x scripts/maintainance/cleanUsersData.php
