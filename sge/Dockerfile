@@ -7,6 +7,9 @@ RUN apt-get update -qq ; apt-get upgrade ; \
 RUN useradd -m dummy
 RUN echo "dummy:dummy" | chpasswd
 #
+
 ADD setup_gridengine.sh /usr/local/bin/setup_gridengine.sh
 RUN chmod +x /usr/local/bin/setup_gridengine.sh
 
+
+CMD /usr/local/bin/setup_gridengine.sh && tail -f /var/spool/gridengine/qmaster/messages && echo sgeclient >> /etc/hosts && echo "hostname ; date" | qsub
