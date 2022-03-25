@@ -1,6 +1,6 @@
 #!/bin/bash
 
-hostname > /var/lib/gridengine/default/common/act_qmaster
+#hostname > /var/lib/gridengine/default/common/act_qmaster
 /etc/init.d/gridengine-master start
 /etc/init.d/gridengine-exec start
 
@@ -79,7 +79,7 @@ EOS
 qconf -Aq /tmp/qconf-aq.txt
 
 # avoid 'stdin: is not a tty'
-sed -i -e 's/^mesg n//' /root/.profile
+#sed -i -e 's/^mesg n//' /root/.profile
 
 # echo "hostname ; date" | qsub
 

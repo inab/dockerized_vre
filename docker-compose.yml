@@ -2,6 +2,7 @@ version: "2.4"
 
 services:
   my-mongodb:
+    hostname: my-mongodb
     image: mongo:4.4
     container_name: my-mongodb
     environment:
@@ -25,6 +26,7 @@ services:
             open-vre:
                 ipv4_address: 172.21.0.10
   mongo_seed:
+    container_name: mongo_seed
     image: mongo
     links:
       - my-mongodb
@@ -38,6 +40,7 @@ services:
 
 
   postgres:
+    container_name: postgres
     image: postgres
     environment:
        POSTGRES_DB: ${POSTGRES_DB}
@@ -48,6 +51,7 @@ services:
                  ipv4_address: 172.21.0.13 
 
   keycloak:
+    container_name: keycloak
     image: quay.io/keycloak/keycloak:15.0.2
     environment:
         DB_VENDOR: ${DB_VENDOR}
@@ -71,25 +75,27 @@ services:
               open-vre:
                 ipv4_address: 172.21.0.12
 
-  sge:
-    build: ./sge/
+  sgemaster:
+    build: ./sge
     volumes:
       - ./sge:/sge
     environment:
-      RUNUSER_USERNAME: master
-      RUNUSER_UID: 1000
-      RUNUSER_GID: 1000
+      RUNUSER_USERNAME: docker
       RUNUSER_HOME: ./sge
+      RUNUSER_UID: '1000'
+      RUNUSER_GID: '100'
     container_name: sgemaster
     hostname: sgemaster
-    #command:
-    # /usr/local/bin/setup_gridengine.sh
+    stdin_open: true
     networks:
       - open-vre
-        #restart: always
+      - shared
     ports:
       - 6444:6444
+  
+
   front_end:
+    container_name: front_end
     build: './front_end/'
     environment:
       fpm.pool.pm.max_requests: 1001
@@ -117,6 +123,9 @@ networks:
       config:
             - subnet: 172.21.0.0/24
 
+  shared: 
+    external:
+      name: shared
 
 volumes:
   shared_data:
