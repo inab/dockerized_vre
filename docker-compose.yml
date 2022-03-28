@@ -92,7 +92,7 @@ services:
       - shared
     ports:
       - 6444:6444
-  
+    restart: always  
 
   front_end:
     container_name: front_end
