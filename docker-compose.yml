@@ -96,21 +96,31 @@ services:
 
   front_end:
     container_name: front_end
+    hostname: front_end.dockerized_vre_open-vre
     build: './front_end/'
     environment:
       fpm.pool.pm.max_requests: 1001
       fpm.pool.user: www-data
       fpm.pool.group: www-data
+      # RUNUSER_USERNAME: user
+      # RUNUSER_HOME: ./sge
+      # RUNUSER_UID: '2000'
+      # RUNUSER_GID: '2000'
     volumes:
+      - ./front_end/act_qmaster:/var/lib/gridengine/default/common/act_qmaster
       - ./volumes/config:/var/www/html/openVRE/config
       - shared_data:/shared_data
     links:
       - my-mongodb
       - keycloak
         #  - postgres
+    depends_on:
+      - sgemaster
     ports:
       - "8088:80"
+        # - "6445:6445"
     networks:
+              shared:
               open-vre:
                 ipv4_address: 172.21.0.14
 
