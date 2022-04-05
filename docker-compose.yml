@@ -80,7 +80,7 @@ services:
     volumes:
       - ./sge:/sge
     environment:
-      RUNUSER_USERNAME: docker
+      RUNUSER_USERNAME: dummy
       RUNUSER_HOME: ./sge
       RUNUSER_UID: '1000'
       RUNUSER_GID: '100'
@@ -102,10 +102,10 @@ services:
       fpm.pool.pm.max_requests: 1001
       fpm.pool.user: www-data
       fpm.pool.group: www-data
-      # RUNUSER_USERNAME: user
-      # RUNUSER_HOME: ./sge
-      # RUNUSER_UID: '2000'
-      # RUNUSER_GID: '2000'
+      RUNUSER_USERNAME: user
+      RUNUSER_HOME: ./sge
+      RUNUSER_UID: '2000'
+      RUNUSER_GID: '2000'
     volumes:
       - ./front_end/act_qmaster:/var/lib/gridengine/default/common/act_qmaster
       - ./volumes/config:/var/www/html/openVRE/config

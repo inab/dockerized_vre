@@ -14,6 +14,10 @@ RUN apt-get install -y \
         libmcrypt-dev \
         libpng-dev
 
+RUN apt-get update -qq ; apt-get upgrade ; \
+    apt-get install -y gridengine-client ; \
+    apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 RUN apt-get update && apt-get install -y libmcrypt-dev \ 
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
     && docker-php-ext-install gd 
@@ -23,6 +27,10 @@ RUN curl -fsSL https://www.mongodb.org/static/pgp/server-4.2.asc | apt-key add -
 RUN add-apt-repository 'deb https://repo.mongodb.org/apt/debian buster/mongodb-org/4.2 main'
 RUN apt-get update
 RUN apt-get install -y mongodb-org
+
+#
+ADD setup.sh /usr/local/bin/setup.sh
+RUN chmod +x /usr/local/bin/setup.sh
 
 WORKDIR /var/www/html
 #RUN git clone https://github.com/inab/openVRE.git
@@ -51,9 +59,12 @@ WORKDIR /var/www/html/openVRE/public
 RUN pwd
 EXPOSE 88 443
 
-ENTRYPOINT ["/opt/docker/bin/entrypoint.sh"]
+RUN useradd -m dummy
+RUN echo "dummy:dummy" | chpasswd
+#
 
-CMD ["supervisord"]
+#ENTRYPOINT ["/opt/docker/bin/entrypoint.sh"]
+CMD sleep 45 && /usr/local/bin/setup.sh && echo "hostname ; date" | qsub -o /tmp/a.txt &&  /opt/docker/bin/entrypoint.sh supervisord
 
 
 #add cleaning step adjusting the document + sistema de cues
