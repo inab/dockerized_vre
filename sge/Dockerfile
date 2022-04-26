@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update -y && apt-get install -y gnupg2
+RUN apt-get update -y && apt-get install -y gnupg2 vim
 RUN echo 'deb http://ftp.debian.org/debian/ stretch main contrib non-free\n\
 deb http://security.debian.org/debian-security/ stretch/updates main contrib non-free\n' > /etc/apt/sources.list.d/debian.list
 
@@ -33,14 +33,34 @@ RUN ln -s /usr/share/gridengine/pixmaps /var/lib/gridengine/qmon/PIXMAPS
 #    apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # dummy user account
-RUN useradd -m dummy
-RUN echo "dummy:dummy" | chpasswd
+#RUN useradd -m dummy --uid=2000
+#RUN echo "dummy:dummy" | chpasswd
 #
 
 ADD setup_gridengine.sh /usr/local/bin/setup_gridengine.sh
 RUN chmod +x /usr/local/bin/setup_gridengine.sh
+#ADD configuration /etc/gridengine/configuration
+#RUN chmod +x /etc/gridengine/configuration
+
+ARG USER=front_end
+ARG UID=2000
+ARG GID=2000
+# default password for user
+ARG PW=docker
+RUN useradd -m ${USER} --uid=${UID} && echo "${USER}:${PW}" | \
+      chpasswd
+#USER ${UID}:${GID}
+ARG USER=tool
+ARG UID=2002
+ARG GID=2002
+# default password for user
+ARG PW=dummy
+# Option1: Using unencrypted password/ specifying password
+RUN useradd -m ${USER} --uid=${UID} && echo "${USER}:${PW}" | \
+      chpasswd
 
 #CMD /usr/local/bin/setup_gridengine.sh && qconf -as sgemaster && echo "hostname ; date" | qsub && sleep 15 && qconf -as front_end.dockerized_vre_open-vre && tail -f /var/spool/gridengine/qmaster/messages
-CMD /usr/local/bin/setup_gridengine.sh && sleep 15 && qconf -as front_end.dockerized_vre_open-vre && tail -f /var/spool/gridengine/qmaster/messages
 #CMD /usr/local/bin/setup_gridengine.sh && tail -f /var/spool/gridengine/qmaster/messages 
+#CMD /usr/local/bin/setup_gridengine.sh && qconf -sconf > /tmp/configuration && sed 's/1000/0/g' /tmp/configuration > /etc/gridengine/configuration && sleep 15 && qconf -as front_end.dockerized_vre_open-vre && tail -f /var/spool/gridengine/qmaster/messages
+CMD /usr/local/bin/setup_gridengine.sh && sleep 15 && qconf -as front_end.dockerized_vre_open-vre && qconf -as sgetool.shared && tail -f /var/spool/gridengine/qmaster/messages
 

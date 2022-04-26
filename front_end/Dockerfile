@@ -59,12 +59,22 @@ WORKDIR /var/www/html/openVRE/public
 RUN pwd
 EXPOSE 88 443
 
-RUN useradd -m dummy
-RUN echo "dummy:dummy" | chpasswd
+ARG USER=dummy
+ARG UID=2001
+ARG GID=2001
+# default password for user
+ARG PW=dummy
+# Option1: Using unencrypted password/ specifying password
+RUN useradd -m ${USER} --uid=${UID} && echo "${USER}:${PW}" | \
+      chpasswd
+USER ${UID}:${GID}
+#RUN useradd -m dummy
+#RUN echo "dummy:dummy" | chpasswd
 #
 
 #ENTRYPOINT ["/opt/docker/bin/entrypoint.sh"]
 CMD sleep 45 && /usr/local/bin/setup.sh && echo "hostname ; date" | qsub -o /tmp/a.txt &&  /opt/docker/bin/entrypoint.sh supervisord
+#CMD /opt/docker/bin/entrypoint.sh supervisord
 
 
 #add cleaning step adjusting the document + sistema de cues
