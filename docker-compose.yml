@@ -12,7 +12,6 @@ services:
       MONGO_INITDB_PASSWORD: ${MONGO_INITDB_PASSWORD}
       MONGO_SERVER: ${MONGO_SERVER}
       MONGO_INITDB_DATABASE: ${MONGO_DB}
-      MONGO_INITDB_COLLECTION: ${MONGO_INITDB_COLLECTION}
     ports:
       - 27017:27017
     links:
@@ -78,11 +77,12 @@ services:
   sgemaster:
     build: ./sge
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
       - ./sge:/sge
       - ./sge/configuration:/tmp/configuration
       - ./sge/configuration:/etc/gridengine/configuration
     environment:
-      RUNUSER_UERNAME: docker
+      RUNUSER_UERNAME: dummy
       RUNUSER_HOME: ./sge
       RUNUSER_UID: '1000'
       RUNUSER_GID: '100'
@@ -100,15 +100,18 @@ services:
     container_name: front_end
     hostname: front_end.dockerized_vre_open-vre
     build: './front_end/'
+    #user: 2001:2001
+    user: "${UID}:${GID}"
     environment:
       fpm.pool.pm.max_requests: 1001
       fpm.pool.user: www-data
       fpm.pool.group: www-data
       RUNUSER_USERNAME: front_end
       RUNUSER_HOME: ./sge
-      RUNUSER_UID: '2000'
-      RUNUSER_GID: '2000'
+      RUNUSER_UID: '2001'
+      RUNUSER_GID: '2001'
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
       - ./front_end/act_qmaster:/var/lib/gridengine/default/common/act_qmaster
       - ./volumes/config:/var/www/html/openVRE/config
       - ./sge/configuration:/etc/gridengine/configuration

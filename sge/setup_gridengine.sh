@@ -76,8 +76,7 @@ s_vmem                INFINITY
 h_vmem                INFINITY
 EOS
 
-#qconf -aconf sgemaster /etc/gridengine/configuration 
-
+qconf -Aq /tmp/qconf-aq.txt 
 
 # avoid 'stdin: is not a tty'
 #sed -i -e 's/^mesg n//' /root/.profile

@@ -26,15 +26,15 @@ RUN apt-get install -y gridengine-exec gridengine-master gridengine-qmon
 #RUN mkdir /var/lib/gridengine/qmon
 RUN ln -s /usr/share/gridengine/pixmaps /var/lib/gridengine/qmon/PIXMAPS
 
-
+RUN apt-get update -y && apt install -y docker.io
 
 #RUN apt-get update -qq ; apt-get upgrade ; \
 #    apt-get install -y gridengine-master gridengine-exec gridengine-client; \
 #    apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # dummy user account
-#RUN useradd -m dummy --uid=2000
-#RUN echo "dummy:dummy" | chpasswd
+RUN useradd -m dummy
+RUN echo "dummy:dummy" | chpasswd
 #
 
 ADD setup_gridengine.sh /usr/local/bin/setup_gridengine.sh
@@ -42,25 +42,15 @@ RUN chmod +x /usr/local/bin/setup_gridengine.sh
 #ADD configuration /etc/gridengine/configuration
 #RUN chmod +x /etc/gridengine/configuration
 
-ARG USER=front_end
-ARG UID=2000
-ARG GID=2000
-# default password for user
-ARG PW=docker
-RUN useradd -m ${USER} --uid=${UID} && echo "${USER}:${PW}" | \
-      chpasswd
+#RUN useradd -m front_end --uid=2001 && echo "front_end:front_end" | \
+#      chpasswd
 #USER ${UID}:${GID}
-ARG USER=tool
-ARG UID=2002
-ARG GID=2002
-# default password for user
-ARG PW=dummy
-# Option1: Using unencrypted password/ specifying password
-RUN useradd -m ${USER} --uid=${UID} && echo "${USER}:${PW}" | \
-      chpasswd
+#RUN useradd -m tool --uid=2002 && echo "tool:tool" | \
+#      chpasswd
 
 #CMD /usr/local/bin/setup_gridengine.sh && qconf -as sgemaster && echo "hostname ; date" | qsub && sleep 15 && qconf -as front_end.dockerized_vre_open-vre && tail -f /var/spool/gridengine/qmaster/messages
 #CMD /usr/local/bin/setup_gridengine.sh && tail -f /var/spool/gridengine/qmaster/messages 
 #CMD /usr/local/bin/setup_gridengine.sh && qconf -sconf > /tmp/configuration && sed 's/1000/0/g' /tmp/configuration > /etc/gridengine/configuration && sleep 15 && qconf -as front_end.dockerized_vre_open-vre && tail -f /var/spool/gridengine/qmaster/messages
-CMD /usr/local/bin/setup_gridengine.sh && sleep 15 && qconf -as front_end.dockerized_vre_open-vre && qconf -as sgetool.shared && tail -f /var/spool/gridengine/qmaster/messages
-
+#CMD /usr/local/bin/setup_gridengine.sh && sleep 15 && qconf -as front_end.dockerized_vre_open-vre && qconf -as sgetool.shared && tail -f /var/spool/gridengine/qmaster/messages
+#CMD /usr/local/bin/setup_gridengine.sh && sleep 15 && qconf -as front_end.dockerized_vre_open-vre && tail -f /var/spool/gridengine/qmaster/messages
+CMD /usr/local/bin/setup_gridengine.sh && tail -f /var/spool/gridengine/qmaster/messages

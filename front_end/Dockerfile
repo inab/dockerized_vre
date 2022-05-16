@@ -7,7 +7,7 @@ RUN apt install -y nodejs
 RUN apt-get install -y autoconf pkg-config libssl-dev
 RUN docker-php-ext-install bcmath
 RUN echo "extension=mongodb.so" >> /usr/local/etc/php/conf.d/mongodb.ini
-
+RUN apt install -y docker.io
 RUN apt-get install -y \
         git libfreetype6-dev \
         libjpeg62-turbo-dev \
@@ -59,22 +59,23 @@ WORKDIR /var/www/html/openVRE/public
 RUN pwd
 EXPOSE 88 443
 
-ARG USER=dummy
-ARG UID=2001
-ARG GID=2001
+#ARG USER=dummy
+#ARG UID=2001
+#ARG GID=2001
 # default password for user
-ARG PW=dummy
+#ARG PW=dummy
 # Option1: Using unencrypted password/ specifying password
-RUN useradd -m ${USER} --uid=${UID} && echo "${USER}:${PW}" | \
-      chpasswd
-USER ${UID}:${GID}
-#RUN useradd -m dummy
-#RUN echo "dummy:dummy" | chpasswd
+#RUN useradd -m ${USER} --uid=${UID} && echo "${USER}:${PW}" | \
+#      chpasswd
+#USER 2001:2001
+RUN useradd -m front_end
+RUN echo "front_end:front_end" | chpasswd
+#USER 2001:2001
 #
-
+#USER front_end
 #ENTRYPOINT ["/opt/docker/bin/entrypoint.sh"]
-CMD sleep 45 && /usr/local/bin/setup.sh && echo "hostname ; date" | qsub -o /tmp/a.txt &&  /opt/docker/bin/entrypoint.sh supervisord
-#CMD /opt/docker/bin/entrypoint.sh supervisord
+#CMD sleep 45 && /usr/local/bin/setup.sh && echo "hostname ; date" | qsub -o /tmp/a.txt &&  /opt/docker/bin/entrypoint.sh supervisord
+CMD /opt/docker/bin/entrypoint.sh supervisord
 
 
 #add cleaning step adjusting the document + sistema de cues

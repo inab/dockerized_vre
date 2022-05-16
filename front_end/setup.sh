@@ -21,10 +21,12 @@ if [ ! -n "${RUNUSER_HOME-}" ] ; then
   exit 1
 fi
 
+groupmod --gid 2001 front_end
+usermod --uid 2001 --gid 2001 --login front_end front_end
 
-groupmod --gid $RUNUSER_GID dummy
-usermod --uid $RUNUSER_UID --gid $RUNUSER_GID --login $RUNUSER_USERNAME dummy
+#groupmod --gid $RUNUSER_GID front_end
+#usermod --uid $RUNUSER_UID --gid $RUNUSER_GID --login $RUNUSER_USERNAME front_end
 
 #su - $RUNUSER_USERNAME -c "cd ${RUNUSER_HOME};export HOME=${RUNUSER_HOME};$*"
-su - $RUNUSER_USERNAME -c "$*"
+su - front_end -c "$*"
 

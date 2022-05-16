@@ -22,7 +22,7 @@
     "infrastructure": {
         "memory": 12,
         "cpus": 4,
-        "executable": "/VM/path/where/main/executable/is/going/to/be/MyTool.py",
+        "executable": "MyTool.py",
         "clouds": {
             "mug-irb": {
                 "launcher": "PMES",
