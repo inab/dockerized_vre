@@ -74,7 +74,7 @@ services:
               open-vre:
                 ipv4_address: 172.21.0.12
 
-  sgemaster:
+  sgecore:
     build: ./sge
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -86,8 +86,8 @@ services:
       RUNUSER_HOME: ./sge
       RUNUSER_UID: '1000'
       RUNUSER_GID: '100'
-    container_name: sgemaster
-    hostname: sgemaster
+    container_name: sgecore
+    hostname: sgecore
     stdin_open: true
     networks:
       - open-vre
@@ -114,14 +114,13 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./front_end/act_qmaster:/var/lib/gridengine/default/common/act_qmaster
       - ./volumes/config:/var/www/html/openVRE/config
-      - ./sge/configuration:/etc/gridengine/configuration
       - shared_data:/shared_data
     links:
       - my-mongodb
       - keycloak
         #  - postgres
     depends_on:
-      - sgemaster
+      - sgecore
     ports:
       - "8088:80"
         # - "6445:6445"
