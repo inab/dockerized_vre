@@ -53,4 +53,4 @@ RUN chmod +x /usr/local/bin/setup_gridengine.sh
 #CMD /usr/local/bin/setup_gridengine.sh && qconf -sconf > /tmp/configuration && sed 's/1000/0/g' /tmp/configuration > /etc/gridengine/configuration && sleep 15 && qconf -as front_end.dockerized_vre_open-vre && tail -f /var/spool/gridengine/qmaster/messages
 #CMD /usr/local/bin/setup_gridengine.sh && sleep 15 && qconf -as front_end.dockerized_vre_open-vre && qconf -as sgetool.shared && tail -f /var/spool/gridengine/qmaster/messages
 #CMD /usr/local/bin/setup_gridengine.sh && sleep 15 && qconf -as front_end.dockerized_vre_open-vre && tail -f /var/spool/gridengine/qmaster/messages
-CMD /usr/local/bin/setup_gridengine.sh && tail -f /var/spool/gridengine/qmaster/messages
+CMD /usr/local/bin/setup_gridengine.sh && qconf -as front_end.dockerized_vre_open-vre && tail -f /var/spool/gridengine/qmaster/messages

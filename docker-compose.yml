@@ -113,7 +113,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./front_end/act_qmaster:/var/lib/gridengine/default/common/act_qmaster
-      - ./volumes/config:/var/www/html/openVRE/config
+      - ./volumes/openVRE/config:/var/www/html/openVRE/config
+      - ./volumes/openVRE/tools:/var/www/html/openVRE/public/tools
       - shared_data:/shared_data
     links:
       - my-mongodb
