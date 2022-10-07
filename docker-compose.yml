@@ -115,7 +115,7 @@ services:
       - ./front_end/act_qmaster:/var/lib/gridengine/default/common/act_qmaster
       - ./volumes/openVRE/config:/var/www/html/openVRE/config
       - ./volumes/openVRE/tools:/var/www/html/openVRE/public/tools
-      - shared_data:/shared_data
+      - ./volumes/shared_data:/shared_data
     links:
       - my-mongodb
       - keycloak
