@@ -16,4 +16,4 @@ qconf -mconf (change UID from 1000 to 0)
 - header fixed but pending to test
 
 
-![architecture openvre (1)](https://user-images.githubusercontent.com/57795749/201341058-d530de67-3eab-4a3b-94de-6336b788fd24.png)
+![architecture openvre (1)](https://user-images.githubusercontent.com/57795749/201341301-6b0cb471-3782-4de0-9dc7-490c5625cd9c.png)
