@@ -87,8 +87,8 @@ services:
     environment:
       RUNUSER_UERNAME: dummy
       RUNUSER_HOME: ./sge
-      RUNUSER_UID: '1000'
-      RUNUSER_GID: '100'
+      #RUNUSER_UID: '1000'
+      #RUNUSER_GID: '100'
     container_name: sgecore
     hostname: sgecore
     stdin_open: true
@@ -111,8 +111,8 @@ services:
       fpm.pool.group: www-data
       RUNUSER_USERNAME: front_end
       RUNUSER_HOME: ./sge
-      RUNUSER_UID: '2001'
-      RUNUSER_GID: '2001'
+      #RUNUSER_UID: '2001'
+      #RUNUSER_GID: '2001'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./front_end/act_qmaster:/var/lib/gridengine/default/common/act_qmaster
