@@ -21,7 +21,6 @@ services:
       - ./volumes/mongo_data:/data/db
       - ./mongodb/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
     networks:
-      # dev:
             open-vre:
                 ipv4_address: 172.21.0.10
   mongo_seed:
@@ -77,18 +76,15 @@ services:
                 ipv4_address: 172.21.0.12
 
   sgecore:
-    build: ./sge
+    build: 
+      context: ./sge
+      #network: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./sge:/sge
       - ./sge/configuration:/tmp/configuration
       - ./sge/configuration:/etc/gridengine/configuration
       - ./volumes/shared_data:/shared_data
-    environment:
-      RUNUSER_UERNAME: dummy
-      RUNUSER_HOME: ./sge
-      #RUNUSER_UID: '1000'
-      #RUNUSER_GID: '100'
     container_name: sgecore
     hostname: sgecore
     stdin_open: true
@@ -97,22 +93,13 @@ services:
       - shared
     ports:
       - 6444:6444
-        #restart: always  
 
   front_end:
     container_name: front_end
     hostname: front_end.dockerized_vre_open-vre
-    build: './front_end/'
-    #user: 2001:2001
-    #user: "${UID}:${GID}"
-    environment:
-      fpm.pool.pm.max_requests: 1001
-      fpm.pool.user: www-data
-      fpm.pool.group: www-data
-      RUNUSER_USERNAME: front_end
-      RUNUSER_HOME: ./sge
-      #RUNUSER_UID: '2001'
-      #RUNUSER_GID: '2001'
+    build: 
+      context: './front_end/'
+      #network: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./front_end/act_qmaster:/var/lib/gridengine/default/common/act_qmaster
@@ -122,12 +109,10 @@ services:
     links:
       - my-mongodb
       - keycloak
-        #  - postgres
     depends_on:
       - sgecore
     ports:
       - "8089:80"
-        # - "6445:6445"
     networks:
               shared:
               open-vre:
@@ -142,7 +127,7 @@ networks:
       config:
             - subnet: 172.21.0.0/24
 
-  shared:
+  shared: 
     external:
       name: shared
 
