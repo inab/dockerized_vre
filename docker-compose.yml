@@ -137,4 +137,4 @@ volumes:
     driver_opts:
        o: bind
        type: none
-       device: /home/ubuntu/dockerized_vre/volumes/shared_data
+       device: ./volumes/shared_data
