@@ -121,8 +121,8 @@ services:
 
 networks:
   open-vre:
-    driver_opts:
-      com.docker.network.driver.mtu: 1442
+    #driver_opts:
+    #  com.docker.network.driver.mtu: 1442
     ipam:
       config:
             - subnet: 172.21.0.0/24
