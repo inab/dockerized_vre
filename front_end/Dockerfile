@@ -33,10 +33,7 @@ ADD setup.sh /usr/local/bin/setup.sh
 RUN chmod +x /usr/local/bin/setup.sh
 
 WORKDIR /var/www/html
-#RUN git clone https://github.com/inab/openVRE.git
-#RUN git clone https://github.com/Socayna/openVRE.git
 RUN git clone --single-branch --branch dockerized https://github.com/inab/openVRE.git
-RUN pwd
 RUN cd openVRE
 WORKDIR /var/www/html/openVRE
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -44,13 +41,7 @@ RUN composer self-update
 RUN composer update --ignore-platform-req=ext-mongodb --ignore-platform-req=ext-mongodb
 RUN mkdir logs
 RUN touch logs/application.log
-#RUN chown -R www-data:www-data  logs/application.log
 RUN chmod -R 777 logs/application.log
-#RUN mkdir /shared_data
-#RUN cp -r -v install/data/* /shared_data/
-#RUN chown -R  www-data:www-data /shared_data/
-#RUN chmod -R 777 /shared_data
-#RUN pwd
 RUN cd public
 
 
@@ -59,22 +50,9 @@ WORKDIR /var/www/html/openVRE/public
 RUN pwd
 EXPOSE 88 443
 
-#ARG USER=dummy
-#ARG UID=2001
-#ARG GID=2001
-# default password for user
-#ARG PW=dummy
-# Option1: Using unencrypted password/ specifying password
-#RUN useradd -m ${USER} --uid=${UID} && echo "${USER}:${PW}" | \
-#      chpasswd
-#USER 2001:2001
-RUN useradd -m front_end
-RUN echo "front_end:front_end" | chpasswd
-#USER 2001:2001
-#
-#USER front_end
-#ENTRYPOINT ["/opt/docker/bin/entrypoint.sh"]
-#CMD sleep 45 && /usr/local/bin/setup.sh && echo "hostname ; date" | qsub -o /tmp/a.txt &&  /opt/docker/bin/entrypoint.sh supervisord
+RUN useradd -m application
+RUN echo "application:application" | chpasswd
+
 CMD /opt/docker/bin/entrypoint.sh supervisord
 
 

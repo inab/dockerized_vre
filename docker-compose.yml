@@ -112,7 +112,7 @@ services:
     depends_on:
       - sgecore
     ports:
-      - "8089:80"
+      - "8080:8080"
     networks:
               shared:
               open-vre:

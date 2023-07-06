@@ -10,22 +10,16 @@ RUN \
   rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update -y && apt-get upgrade -y && apt-get install git 
-# Define mountable directories.
-#VOLUME ["/data/db"]
 
 # Define working directory.
 WORKDIR /data
 
 # Define default command.
 CMD ["mongod --httpinterface"]
-#ENTRYPOINT ["/usr/bin/mongod"]
 
 # Expose ports.
 EXPOSE 27017
 EXPOSE 28017
-
-#RUN git clone https://github.com/inab/openVRE.git
-#RUN for f in openVRE/install/database/*.json; do mongoimport --host my-mongodb --db open-vre -u ${MONGO_ADMIN} -p ${MONGO_ADMIN_PASS} --authenticationDatabase admin $f; done
 
 
 ~                       
