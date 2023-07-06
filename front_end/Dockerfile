@@ -50,8 +50,8 @@ WORKDIR /var/www/html/openVRE/public
 RUN pwd
 EXPOSE 88 443
 
-RUN useradd -m application
-RUN echo "application:application" | chpasswd
+#RUN useradd -m application
+#RUN echo "application:application" | chpasswd
 
 CMD /opt/docker/bin/entrypoint.sh supervisord
 
