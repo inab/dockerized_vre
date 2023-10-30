@@ -6,7 +6,7 @@
 
 
 // Main config
-$GLOBALS['SERVER']    = "http://84.88.186.195:8088"; // domain 
+$GLOBALS['SERVER']    = http(s)://my_server_FDQN:8089; // url accessible from outside netowrk
 $GLOBALS['BASEURL']   = "/"; // prefix url path. Set "/" for no prefix
 $GLOBALS['AppPrefix'] = "VRE-TEST"; // project url acronym
 $GLOBALS['NAME']      = "Project Name"; // project name 
@@ -25,10 +25,10 @@ $GLOBALS['queueTask']  = "local.q"; //default queue
 $GLOBALS['db_credentials'] = __DIR__."/mongo.conf"; // Mongo access 
 $GLOBALS['dbname_VRE']     = "openVRE"; // Database name
 
-//VRE installation paths
+//VRE installation paths TODO create if do not exists
 $GLOBALS['root']       = dirname(__DIR__); // VRE root directory
-$GLOBALS['logFile']    = $GLOBALS['root']."/logs/application.log"; // Log file path 
 $GLOBALS['shared']     = "/shared_data/"; // VRE data directory
+$GLOBALS['logFile']    = $GLOBALS['shared']."/logs/application.log"; // Log file path
 $GLOBALS['dataDir']    = $GLOBALS['shared']."userdata/"; // User data directory
 $GLOBALS['pubDir']     = $GLOBALS['shared']."public/"; // Public data directory
 $GLOBALS['sampleData'] = $GLOBALS['shared']."sampleData/"; // Tool dataset directory 
@@ -49,9 +49,10 @@ $GLOBALS['tool_dev_sample']     = $GLOBALS['root']."/install/data/tool_schemas/t
 $GLOBALS['tool_io_dev_sample']  = $GLOBALS['root']."/install/data/tool_schemas/tool_specification/examples/example_io.json"; // template for tool registration - step 1 I/O
 
 // Oauth2 authentification
+$GLOBALS['auth_required']          = false; // if set login is required, no anonymous usage
 $GLOBALS['auth_credentials']       = __DIR__."/oauth2.conf"; // oauth2 client credentials
 $GLOBALS['authAdmin_credentials']  = __DIR__."/oauth2_admin.conf"; // oauth2 client credentials with admin privileges
-$GLOBALS['authServer']             = 'http://84.88.186.195:8089/auth'; // external oauth2 server
+$GLOBALS['authServer']             = 'http://my_server_FDQN:8080/auth'; // internal oauth2 server, replace by external URL if needed
 $GLOBALS['authRealm']              = 'VRE'; // keycloak realm
 $GLOBALS['urlAuthorize' ]          = $GLOBALS['authServer'].'/realms/'.$GLOBALS['authRealm'].'/protocol/openid-connect/auth';     //get autorization_code
 $GLOBALS['urlAccessToken']         = $GLOBALS['authServer'].'/realms/'.$GLOBALS['authRealm'].'/protocol/openid-connect/token';    //get token
