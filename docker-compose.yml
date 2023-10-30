@@ -10,10 +10,11 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
       MONGO_INITDB_USERNAME: ${MONGO_INITDB_USERNAME}
       MONGO_INITDB_PASSWORD: ${MONGO_INITDB_PASSWORD}
+      MONGO_PORT: ${MONGO_PORT}
       MONGO_SERVER: ${MONGO_SERVER}
       MONGO_INITDB_DATABASE: ${MONGO_DB}
     ports:
-      - 27017:27017
+      - ${MONGO_PORT}:${MONGO_PORT}
     links:
       - keycloak
     env_file: .env
@@ -30,9 +31,10 @@ services:
       - my-mongodb
     volumes:
       - ./mongo-seed:/mongo-seed
+      - ./volumes/shared_data:/shared_data
+      - ./front_end/openVRE/install:/install_data
     command:
       /mongo-seed/import.sh
-
     networks:
       - open-vre
 
