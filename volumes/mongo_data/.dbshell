@@ -1,5 +1,0 @@
-echo ">>>>>>> trying to create database and users"
-db=db.getSiblingDB('openVRE');
-use openVRE;
-use openVRE;
-db.createCollection("VREcollection")
