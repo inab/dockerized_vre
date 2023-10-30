@@ -33,7 +33,8 @@ ADD setup.sh /usr/local/bin/setup.sh
 RUN chmod +x /usr/local/bin/setup.sh
 
 WORKDIR /var/www/html
-RUN git clone --single-branch --branch dockerized https://github.com/inab/openVRE.git
+ADD openVRE /var/www/html/openVRE
+#RUN git clone --single-branch --branch dockerized https://github.com/inab/openVRE.git
 RUN cd openVRE
 WORKDIR /var/www/html/openVRE
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

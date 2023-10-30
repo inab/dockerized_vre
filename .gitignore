@@ -1,0 +1,12 @@
+#PHP libraries
+front_end/openVRE/vendor/*
+front_end/openVRE/composer.lock
+front_end/openVRE/composer.phar
+# Configurartion files
+front_end/openVRE/config/*conf
+front_end/openVRE/config/globals.inc.php
+#Tools and Visualizers
+front_end/openVRE/public/tools/*
+front_end/openVRE/!public/tools/tool_skeleton/
+# Others
+volumes/shared_data/logs/
