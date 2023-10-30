@@ -16,13 +16,13 @@ services:
       - 27017:27017
     links:
       - keycloak
-    env_file: .env 
+    env_file: .env
     volumes:
       - ./volumes/mongo_data:/data/db
       - ./mongodb/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
     networks:
-            open-vre:
-                ipv4_address: 172.21.0.10
+        open-vre:
+            ipv4_address: 172.21.0.10
   mongo_seed:
     container_name: mongo_seed
     image: mongo
@@ -45,8 +45,8 @@ services:
        POSTGRES_USER: ${POSTGRES_USER}
        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     networks:
-              open-vre:
-                 ipv4_address: 172.21.0.13 
+      open-vre:
+          ipv4_address: 172.21.0.13 
 
   keycloak:
     container_name: keycloak
@@ -61,14 +61,14 @@ services:
         KEYCLOAK_USER: ${KEYCLOAK_USER}
         KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
         PROXY_ADDRESS_FORWARDING: "true"
-        KEYCLOAK_FRONTEND_URL: https://nextprocurement.bsc.es/auth
-          #KEYCLOAK_FRONTEND_URL: http://https://84.88.189.135:8443/auth/
+        KEYCLOAK_FRONTEND_URL: ${FQDN_HOST_PROTOCOL}://${FQDN_HOST}:${KEYCLOAK_PORT}/auth
+
     volumes:
         - "./keycloak/realms:/opt/jboss/keycloak/imports"
     command:
             - '-b 0.0.0.0 -Dkeycloak.profile.feature.upload_scripts=enabled -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/opt/jboss/keycloak/imports/realm-export.json -Dkeycloak.migration.strategy=IGNORE_EXISTING'
     ports:
-        - 8080:8080
+        - ${KEYCLOAK_PORT}:8080
     links:
         - postgres
     networks:
@@ -97,7 +97,9 @@ services:
   front_end:
     container_name: front_end
     hostname: front_end.dockerized_vre_open-vre
-    build: 
+    extra_hosts:
+      - "${FQDN_HOST}:172.21.0.1"
+    build:
       context: './front_end/'
       #network: host
     volumes:
