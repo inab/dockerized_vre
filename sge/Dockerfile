@@ -40,6 +40,12 @@ RUN useradd -m application \
 ADD setup_gridengine.sh /usr/local/bin/setup_gridengine.sh
 RUN chmod +x /usr/local/bin/setup_gridengine.sh
 
+<<<<<<< HEAD
 # Define the default command to execute the setup script, configure GridEngine, and tail logs
 CMD /usr/local/bin/setup_gridengine.sh && qconf -as front_end && tail -f /var/spool/gridengine/qmaster/messages
+=======
+CMD /usr/local/bin/setup_gridengine.sh && qconf -as front_end && tail -f /var/spool/gridengine/qmaster/messages
+
+
+>>>>>>> 63cb4cff9deb78bc01a1056021a4be3ba210c909
 
