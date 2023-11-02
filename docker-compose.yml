@@ -14,7 +14,7 @@ services:
       MONGO_SERVER: ${MONGO_SERVER}
       MONGO_INITDB_DATABASE: ${MONGO_DB}
     ports:
-      - ${MONGO_PORT}:${MONGO_PORT}
+      - ${MONGO_PORT}:27017
     links:
       - keycloak
     env_file: .env 
@@ -29,6 +29,14 @@ services:
     image: mongo
     links:
       - my-mongodb
+    env_file: .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_USERNAME: ${MONGO_INITDB_USERNAME}
+      MONGO_INITDB_PASSWORD: ${MONGO_INITDB_PASSWORD}
+      MONGO_SERVER: ${MONGO_SERVER}
+      MONGO_INITDB_DATABASE: ${MONGO_DB}
     volumes:
       - ./mongo-seed:/mongo-seed
       - ./volumes/shared_data:/shared_data

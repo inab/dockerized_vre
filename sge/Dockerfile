@@ -1,33 +1,45 @@
-FROM ubuntu:18.04
+# Use an official Debian image as the base image
+FROM debian:bullseye-slim
+
+# Set non-interactive mode for apt-get
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update -y && apt-get install -y gnupg2 vim
+# Install necessary packages: gnupg, vim, parallel, g++
+RUN apt-get update -y  \
+    && apt-get install -y \
+        gnupg2 \
+        vim \
+        parallel \
+        g++ \
+        docker.io \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN echo 'deb http://deb.debian.org/debian/ buster main contrib non-free\n\
-deb http://security.debian.org/debian-security/ buster/updates main contrib non-free\n' > /etc/apt/sources.list.d/debian.list
+# Copy the local keys into the Docker image
+COPY keys /keys
 
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys AA8E81B4331F7F50
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 112695A0E562B32A
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 04EE7237B7D453EC
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EF0F382A1A7B6500
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 648ACFD622F3D138
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0E98404D386FA1D9
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys DCC9EFBF77E11517
+# Import GPG keys
+RUN gpg --import /keys/AA8E81B4331F7F50.asc \
+    && gpg --import /keys/DCC9EFBF77E11517.asc \
+    && gpg --import /keys/112695A0E562B32A.asc \
+    && gpg --import /keys/04EE7237B7D453EC.asc \
+    && gpg --import /keys/EF0F382A1A7B6500.asc \
+    && gpg --import /keys/648ACFD622F3D138.asc \
+    && gpg --import /keys/DCC9EFBF77E11517.asc \
+    && gpg --import /keys/54404762BBB6E853.asc \
+    && gpg --import /keys/0E98404D386FA1D9.asc
 
-RUN apt-get update -y && apt-get install -y debian-archive-keyring
-
+# Update the package lists and install GridEngine packages
 RUN apt-get update -y && apt-get install -y gridengine-exec gridengine-master gridengine-qmon
-RUN ln -s /usr/share/gridengine/pixmaps /var/lib/gridengine/qmon/PIXMAPS
 
-RUN apt-get update -y && apt-get install -y docker.io
+# Create a new user 'application' and set password
+RUN useradd -m application \
+    && echo "application:application" | chpasswd
 
-RUN useradd -m application
-RUN echo "application:application" | chpasswd
-
+# Add setup script and set permissions
 ADD setup_gridengine.sh /usr/local/bin/setup_gridengine.sh
 RUN chmod +x /usr/local/bin/setup_gridengine.sh
 
-CMD /usr/local/bin/setup_gridengine.sh && qconf -as front_end.dockerized_vre_open-vre && tail -f /var/spool/gridengine/qmaster/messages
-
-
+# Define the default command to execute the setup script, configure GridEngine, and tail logs
+CMD /usr/local/bin/setup_gridengine.sh && qconf -as front_end && tail -f /var/spool/gridengine/qmaster/messages
 

@@ -9,4 +9,5 @@ front_end/openVRE/config/globals.inc.php
 front_end/openVRE/public/tools/*
 front_end/openVRE/!public/tools/tool_skeleton/
 # Others
+volumes/mongo_data
 volumes/shared_data/logs/
