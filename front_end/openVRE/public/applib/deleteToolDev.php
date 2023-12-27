@@ -9,11 +9,11 @@ redirectOutside();
 
 $r = deleteToolDev($_REQUEST['toolid']);
 
-if ($r == "0"){
-    ?><script type="text/javascript">window.history.go(-1);</script><?php
+if ($r == "0") {?>
+    <script type="text/javascript">window.history.go(-1);</script>
+<?php
     exit(0);
 }
 
 redirect($GLOBALS['BASEURL'].'admin/myNewTools.php');
 
-?>

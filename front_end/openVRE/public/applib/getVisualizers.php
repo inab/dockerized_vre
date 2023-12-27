@@ -4,7 +4,7 @@ require __DIR__."/../../config/bootstrap.php";
 
 redirectOutside();
 
-if(! $_POST){
+if (!$_POST){
 	redirect($GLOBALS['URL']);
 }
 
@@ -20,23 +20,21 @@ $visualizers = getVisualizers_ListByID($visualizersList);
 
 sort($visualizers);
 
-if(!empty($visualizers)) {
+if (!empty($visualizers)) {
 
-foreach($visualizers as $v) { 
-	
-	echo '<li>';
-	echo '<a href="javascript:runVisualizer(\''.$v['_id'].'\', \''.$_SESSION['User']['id'].'\');" class="'.$v['_id'].'">';
-	include '../visualizers/'.$v['_id'].'/assets/ws/icon.php';
-	echo ' View in '.$v['name'];
-	echo '</a>';
-	echo '</li>';
+	foreach($visualizers as $v) { ?>
+		<li>
+			<a href="javascript:runVisualizer('<?=$v['_id']?>', '<?=$_SESSION['User']['id']?>');" class="<?=$v['_id']?>">
+			<?php include '../visualizers/'.$v['_id'].'/assets/ws/icon.php'; ?>
+			View in <?=$v['name']?></a>
+		</li>
+	<?php
+	}
 
-}
+} else { ?>
 
-}else{
-
-	echo '<li>';
-	echo '<a href="javascript:;" style="mouse:default;"><i class="fa fa-exclamation-triangle"></i> No visualizers available for this combination of files</a>';
-	echo '</li>';
-
+	<li>
+		<a href="javascript:;" style="mouse:default;"><i class="fa fa-exclamation-triangle"></i> No visualizers available for this combination of files</a>
+	</li>
+<?php
 }

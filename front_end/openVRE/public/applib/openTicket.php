@@ -3,22 +3,24 @@
 require __DIR__."/../../config/bootstrap.php";
 
 switch($_REQUEST["Request"]) {
-	case 'general': $req = "Technical question";
-									break;
-	case 'tools': $req = "Issue related with tools";
-								break;
-	case 'space': $req = "Request to increase disk quota";
-								break;
-	case 'tooldev': $req = "Request for becoming a tool developer";
-								break;
-
-
+	case 'general':
+		$req = "Technical question";
+		break;
+	case 'tools':
+		$req = "Issue related with tools";
+		break;
+	case 'space':
+		$req = "Request to increase disk quota";
+		break;
+	case 'tooldev':
+		$req = "Request for becoming a tool developer";
+		break;
 }
 
 $tool_name = '';
 
-if(isset($_REQUEST['Tool'])) {
-	$toolProp = $GLOBALS['toolsCol']->findOne(array('_id' => $_REQUEST['Tool']));
+if (isset($_REQUEST['Tool'])) {
+	$toolProp = $GLOBALS['toolsCol']->findOne(['_id' => $_REQUEST['Tool']]);
 	$toolContact = $toolProp["owner"]["contact"];
 	$tool_name = ' - '.$toolProp["name"];
 }
@@ -43,7 +45,7 @@ $messageUser = '
 	Request message: '.$_REQUEST["Message"].'<br><br>
 	'.$GLOBALS['AppPrefix'].' VRE Technical Team';
 
-if(sendEmail($GLOBALS['ADMINMAIL'], "[".$ticketnumber."]: ".$req." - ".$_REQUEST["Subject"], $message, $_REQUEST["Email"], $toolContact)) {
+if (sendEmail($GLOBALS['ADMINMAIL'], "[".$ticketnumber."]: ".$req." - ".$_REQUEST["Subject"], $message, $_REQUEST["Email"], $toolContact)) {
 
 	sendEmail($_REQUEST["Email"], "[".$ticketnumber."]: ".$req." - ".$_REQUEST["Subject"], $messageUser, $_REQUEST["Email"]);
 
@@ -54,7 +56,4 @@ if(sendEmail($GLOBALS['ADMINMAIL'], "[".$ticketnumber."]: ".$req." - ".$_REQUEST
 
 	$_SESSION['errorData']['Error'][] = "Error opening ticket, please try again later.";
 	redirect($_SERVER['HTTP_REFERER']);
-
 }
-
-

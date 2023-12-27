@@ -2,7 +2,7 @@
 
 require __DIR__."/../../config/bootstrap.php";
 
-if($_POST){
+if ($_POST) {
 
 /* get core information (snapshot) */
 $stat1 = GetCoreInformation();
@@ -15,9 +15,6 @@ $data = GetCpuPercentages($stat1, $stat2);
 
 echo json_encode($data);
 
-}else{
+} else {
 	redirect($GLOBALS['URL']);
 }
-
-
-?>

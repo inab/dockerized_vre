@@ -13,8 +13,8 @@ $jobs_last = getUserJobs($_SESSION['User']['_id']);
 
 $diff = strcmp(json_encode($jobs_ori), json_encode($jobs_last));
 
-if ($diff){
-    echo '{ "hasChanged":1 }';
-}else{
+if ($diff) {
+    echo '{ "hasChanged": 1}';
+} else {
     echo '{ "hasChanged": 0 }';
 }

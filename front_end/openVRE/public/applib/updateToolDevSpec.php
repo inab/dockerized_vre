@@ -5,7 +5,7 @@ require __DIR__."/../../config/bootstrap.php";
 if($_REQUEST){
 
 	$data_json = json_decode($_REQUEST['json_tool'], true);
-	
+
 	if(!isset($data_json["_id"])) {
 		$_SESSION['errorData']['Error'][] = "You are not allowed to remove '_id' field.";
 		redirect($GLOBALS['BASEURL'].'admin/jsonSpecValidator.php?id='.$_REQUEST['toolid']);
@@ -16,7 +16,7 @@ if($_REQUEST){
 		redirect($GLOBALS['BASEURL'].'admin/jsonSpecValidator.php?id='.$_REQUEST['toolid']);
 	}
 
-	$data = $GLOBALS['toolsDevMetaCol']->findOne(array('_id' => $_REQUEST['toolid']));
+	$data = $GLOBALS['toolsDevMetaCol']->findOne(['_id' => $_REQUEST['toolid']]);
 
 	if(!isset($data)) {
 		$_SESSION['errorData']['Error'][] = "Tool id unexisting.";
@@ -35,9 +35,20 @@ if($_REQUEST){
 		$msg = "Tool specification saved but it doesn't validate against our JSON Schema.";
 	}
 
-	$GLOBALS['toolsDevMetaCol']->updateOne(array('_id' => $_REQUEST['toolid']),
-                                 array('$set'   => array('last_status_date' => date('Y/m/d H:i:s'), 'step3.tool_spec' => $data_json, 'step3.date' => date('Y/m/d H:i:s'), 'step3.status' => $validated, 'step3.tool_spec_validated' => $validated, 'step3.tool_spec_saved' => true)));
-	
+	$GLOBALS['toolsDevMetaCol']->updateOne(
+		['_id' => $_REQUEST['toolid']],
+        [
+			'$set' => [
+				'last_status_date' => date('Y/m/d H:i:s'),
+				'step3.tool_spec' => $data_json,
+				'step3.date' => date('Y/m/d H:i:s'),
+				'step3.status' => $validated,
+				'step3.tool_spec_validated' => $validated,
+				'step3.tool_spec_saved' => true
+			]
+		]
+	);
+
 	//$data_json["name"]
 	$working_dir = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.dev/".$data_json["_id"];
 	$working_dir = preg_replace('#/+#','/',$working_dir);
@@ -49,6 +60,6 @@ if($_REQUEST){
 	$_SESSION['errorData']['Info'][] = $msg;
 	redirect($GLOBALS['BASEURL'].'admin/myNewTools.php');
 
-}else{
+} else {
 	redirect($GLOBALS['BASEURL']);
 }

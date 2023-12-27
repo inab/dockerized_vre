@@ -4,7 +4,7 @@
 require dirname(__FILE__)."/../config/globals.inc.php";
 
 // import vendor libs
-require dirname(__FILE__)."/../vendor/autoload.php"; 
+require dirname(__FILE__)."/../vendor/autoload.php";
 
 // initialize session
 require dirname(__FILE__)."/../public/phplib/session.inc";
@@ -17,5 +17,3 @@ foreach(glob(dirname(__FILE__)."/../public/phplib/classes/*.php") as $lib){
 foreach(glob(dirname(__FILE__)."/../public/phplib/*.php") as $lib){
     require $lib;
 }
-
-?>

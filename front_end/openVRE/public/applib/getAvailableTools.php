@@ -4,7 +4,7 @@ require __DIR__."/../../config/bootstrap.php";
 
 redirectOutside();
 
-if(!$_REQUEST){
+if (!$_REQUEST) {
 	//redirect($GLOBALS['URL']);
 	echo "Network error, please reload the Workspace";
 }
@@ -23,28 +23,21 @@ $tools = getTools_ListByID($toolsList, 1);
 
 sort($tools);
 
-if(!empty($tools)) {
-
-foreach($tools as $t) { 
-
-	echo '<li>';
-	echo '<a href="javascript:runTool(\''.$t['_id'].'\');" class="'.$t['_id'].'">';
-	if (is_file('../tools/'.$t['_id'].'/assets/ws/icon.php'))
-		include '../tools/'.$t['_id'].'/assets/ws/icon.php';
-	else
-		include '../tools/tool_skeleton/assets/ws/icon.php';
-	echo ' '.$t['name'];
-	echo '</a>';
-	echo '</li>';
-
+if (!empty($tools)) {
+	foreach($tools as $t) { ?>
+		<li>
+			<a href="javascript:runTool('<?=$t['_id']?>');" class="<?=$t['_id']?>">
+		<?php
+			if (is_file('../tools/'.$t['_id'].'/assets/ws/icon.php')) {
+				include '../tools/'.$t['_id'].'/assets/ws/icon.php';
+			} else {
+				include '../tools/tool_skeleton/assets/ws/icon.php';
+			}
+		?><?=$t['name']?></a>
+		</li>
+	<?php
+	}
+} else { ?>
+	<li><a href="javascript:;" style="mouse:default;"><i class="fa fa-exclamation-triangle"></i> No tools available for this combination of files</a></li>
+<?php
 }
-
-}else{
-
-	echo '<li>';
-	echo '<a href="javascript:;" style="mouse:default;"><i class="fa fa-exclamation-triangle"></i> No tools available for this combination of files</a>';
-	echo '</li>';
-
-}
-
-

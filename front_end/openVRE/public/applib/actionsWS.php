@@ -1,6 +1,6 @@
 <?php
 /*
- * 
+ *
  */
 
 require __DIR__."/../../config/bootstrap.php";
@@ -19,10 +19,10 @@ if (!isset($_REQUEST['fn']) && !isset($_REQUEST['fnPath']) && !preg_match('/canc
 }
 /*if (is_array($_REQUEST['fn']))
 	$_REQUEST['fn']=$_REQUEST['fn'][0];*/
-    	
+
 //$fileData = $GLOBALS['filesCol']->findOne(array('_id' => $_REQUEST['fn'], 'owner' => $_SESSION['User']['id']));
 //$fileMeta = $GLOBALS['filesMetaCol']->findOne(array('_id' => $_REQUEST['fn']));
-$filePath = getAttr_fromGSFileId($_REQUEST['fn'],'path'); 
+$filePath = getAttr_fromGSFileId($_REQUEST['fn'],'path');
 $rfn      = $GLOBALS['dataDir']."/$filePath";
 
 //
@@ -31,8 +31,6 @@ $rfn      = $GLOBALS['dataDir']."/$filePath";
 
 if (isset($_REQUEST['op'])){
   switch ($_REQUEST['op']) {
-
-
 	case 'deleteAll':
     case 'deleteSure':
         $r = deleteFiles($_REQUEST['fn']);
@@ -58,4 +56,3 @@ if (isset($_REQUEST['op'])){
 
 	}
 }
-

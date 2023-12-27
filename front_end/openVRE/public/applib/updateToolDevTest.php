@@ -69,36 +69,32 @@ if (!isset($_REQUEST['input_files'])){
     ?><script type="text/javascript">window.history.go(-1);</script><?php
     exit(0);
 }
-
-
-
 //
 // Get input_files medatada (TODO with associated_files)
 
-$files   = Array(); // distinct file Objs to stage in 
+$files   = []; // distinct file Objs to stage in
 
-$filesId = Array();
-foreach($_REQUEST['input_files'] as $input_file){
-    if (is_array($input_file)){
+$filesId = [];
+foreach ($_REQUEST['input_files'] as $input_file) {
+    if (is_array($input_file)) {
 	    $filesId = array_merge($filesId,$input_file);
-    }else{
-        if ($input_file)
+    } else {
+        if ($input_file) {
             array_push($filesId,$input_file);
+        }
     }
 }
-$filesId=array_unique($filesId);
-
+$filesId = array_unique($filesId);
 
 $r = $submitTool->setMetadata_fromTool($_REQUEST['input_files'],$_REQUEST['metadata']);
 
 $files = $submitTool->metadata;
 
-if ($debug){
+if ($debug) {
 	print "<br/></br>TOTAL number of FILES given as params : ".count($filesId);
     print "<br/></br>TOTAL number of FILES (including associated) : ".count(array_keys($files))."</br>";
 	//print "<br/></br>METADATA  for given files is :<br/>"; var_dump($submitTool->metadata);
 }
-
 
 //
 // Get input_files medatada (from input_files_public_dir)
@@ -111,15 +107,11 @@ if (count($_REQUEST['input_files_public_dir'])){
     }
 }
 
-
-
 // Set Arguments
 if (!$_REQUEST['arguments']){
     $_REQUEST['arguments']=array();
 }
 $submitTool->setArguments($_REQUEST['arguments']);
-
-
 
 //
 // Check InputFiles
@@ -135,8 +127,6 @@ if ($r == "0"){
     ?><script type="text/javascript">window.history.go(-1);</script><?php
     exit(0);
 }
-
-
 //
 // Check InputFiles (from input_files_public_dir)
 
@@ -203,7 +193,7 @@ if($r == "0"){
 }
 
 //
-// Creating TAR file with configuration files + metadata files + bash files 
+// Creating TAR file with configuration files + metadata files + bash files
 
 $r  = $submitTool->tar_test_files();
 
@@ -219,7 +209,7 @@ if($r == "0"){
 }
 
 //
-// Register generated test files 
+// Register generated test files
 
 $r  = $submitTool->save_test_files();
 
@@ -252,5 +242,3 @@ if ($debug){
 
 
 redirect($GLOBALS['BASEURL'].'admin/myNewTools.php');
-
-?>

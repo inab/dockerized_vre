@@ -3,14 +3,14 @@
 require __DIR__."/../../config/bootstrap.php";
 //require "../phplib/admin.inc.php";
 
-$data = $GLOBALS['toolsDevMetaCol']->findOne(array('_id' => $_REQUEST['toolid']));
+$data = $GLOBALS['toolsDevMetaCol']->findOne(['_id' => $_REQUEST['toolid']]);
 
 if(!isset($data)) {
     $_SESSION['errorData']['Error'][] = "Tool id unexisting.";
     redirect($GLOBALS['BASEURL'].'admin/myNewTools.php?id='.$_REQUEST['toolid']);
 }
 
-if($data["user_id"] != $_SESSION["User"]["id"] && ($_SESSION['User']['Type'] != 0)) {
+if ($data["user_id"] != $_SESSION["User"]["id"] && ($_SESSION['User']['Type'] != 0)) {
     $_SESSION['errorData']['Error'][] = "The tool id <strong>".$_REQUEST['toolid']."</strong> you are trying to edit doesn't belong to you.";
     redirect($GLOBALS['BASEURL'].'admin/myNewTools.php');
 }
@@ -36,12 +36,19 @@ $messageUser = '
     Comments: '.$_REQUEST['comments'].'<br><br>
     VRE Technical Team';
 
-if(sendEmail($GLOBALS['ADMINMAIL'], "[".$ticketnumber."]: ".$subject, $message, $_SESSION["User"]["Email"])) {
+if (sendEmail($GLOBALS['ADMINMAIL'], "[".$ticketnumber."]: ".$subject, $message, $_SESSION["User"]["Email"])) {
 
     sendEmail($_SESSION["User"]["Email"], "[".$ticketnumber."]: ".$subject, $messageUser, $_SESSION["User"]["Email"]);
 
-    $GLOBALS['toolsDevMetaCol']->updateOne(array('_id' => $_REQUEST['toolid']),
-                                 array('$set'   => array('last_status_date' => date('Y/m/d H:i:s'), 'last_status' => 'submitted')));
+    $GLOBALS['toolsDevMetaCol']->updateOne(
+        ['_id' => $_REQUEST['toolid']],
+        [
+            '$set' => [
+                'last_status_date' => date('Y/m/d H:i:s'),
+                'last_status' => 'submitted'
+             ]
+        ]
+    );
 
     $_SESSION['errorData']['Info'][] = "Tool successfully submitted, we will check it and give you an answer as soon as possible.";
     redirect($GLOBALS['BASEURL'].'admin/myNewTools.php');

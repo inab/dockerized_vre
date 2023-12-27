@@ -2,13 +2,12 @@
 
 require __DIR__."/../../config/bootstrap.php";
 
+if ($_REQUEST) {
 
-if($_REQUEST){
+	$inTools = $GLOBALS['toolsCol']->findOne(['_id' => $_REQUEST['toolid']]);
+	$inToolsDev = $GLOBALS['toolsDevMetaCol']->findOne(['_id' => $_REQUEST['toolid']]);
 
-	$inTools = $GLOBALS['toolsCol']->findOne(array('_id' => $_REQUEST['toolid']));
-	$inToolsDev = $GLOBALS['toolsDevMetaCol']->findOne(array('_id' => $_REQUEST['toolid']));
-
-	if(isset($inTools) || isset($inToolsDev)) {
+	if (isset($inTools) || isset($inToolsDev)) {
 		$_SESSION['errorData']['Error'][] = "The tool id <strong>".$_REQUEST['toolid']."</strong> is already chosen, please try with another.";
 		redirect($GLOBALS['BASEURL'].'admin/newTool.php');
 	} else {
@@ -19,7 +18,7 @@ if($_REQUEST){
 
 		$io = file_get_contents($GLOBALS['tool_io_dev_sample']);
 		$io = str_replace("my_tool_id", $_REQUEST['toolid'], $io);
-		$io = json_decode($io);	
+		$io = json_decode($io);
 
 		$meta = [
 			"_id" => $_REQUEST['toolid'],
@@ -36,7 +35,7 @@ if($_REQUEST){
 			"step2" => [
 				"status" => false,
 				"date" => "",
-				"type" => "", 
+				"type" => "",
 				"tool_code" => ""
 			],
 			"step3" => [
@@ -69,9 +68,7 @@ if($_REQUEST){
 
 		$_SESSION['errorData']['Info'][] = "The tool <strong>".$_REQUEST['toolid']."</strong> has been created, please check the steps.";
 		redirect($GLOBALS['BASEURL'].'admin/myNewTools.php');
-
 	}
-
-}else{
+} else {
 	redirect($GLOBALS['BASEURL']);
 }

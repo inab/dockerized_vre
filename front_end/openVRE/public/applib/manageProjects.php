@@ -2,11 +2,11 @@
 
 require __DIR__."/../../config/bootstrap.php";
 
-if(!$_REQUEST){
+if (!$_REQUEST) {
     redirect($GLOBALS['URL']);
 }
 
-if (!isset($_REQUEST['op'])){
+if (!isset($_REQUEST['op'])) {
     $_SESSION['errorData']['Internal'][]="Error. Cannot manage project. No 'op' set.";
     redirect($GLOBALS['BASEURL']."workspace/");
 }
@@ -14,23 +14,22 @@ if (!isset($_REQUEST['op'])){
 $dataDir_ant      = $_SESSION['User']['dataDir'];
 $dataDir_ant_name = getAttr_fromGSFileId($dataDir_ant,"name");
 
-
 //
 // set project data from form
 
-$projData=array();
+$projData = [];
 if ($_REQUEST['op'] == "new" || $_REQUEST['op'] == "edit"){
-    $projData  = array(
+    $projData  = [
         "name"         => $_REQUEST['pr_name'],
         "description"  => $_REQUEST['pr_ldesc'],
         "keywords"     => $_REQUEST['pr_keywords']
-    );
+    ];
 }
 
 //
 // create project folder
- 
-if ($_REQUEST['op'] == "new"){
+
+if ($_REQUEST['op'] == "new") {
 
     // create project folder
     $proj_code = createLabel_proj();
@@ -48,31 +47,26 @@ if ($_REQUEST['op'] == "new"){
     $_REQUEST['pr_code'] = $proj_code;
     $_SESSION['errorData']['Info'][] = "Done! New project '".$projData['name']."' created.";
 
-
 //
 // edit project
 
-}elseif($_REQUEST['op'] == "edit"){
+} elseif ($_REQUEST['op'] == "edit") {
 
     $r = updateProject($_REQUEST['pr_id'],$projData);
-    if (!$r){
+    if (!$r) {
         // return error
         $_SESSION['errorData']['Error'][] = "Project not edited";
     	redirect($GLOBALS['BASEURL']."workspace/");
     }
     $_SESSION['errorData']['Info'][] = "Done! Project '".$projData['name']."' successfully edited.";
 
-
 //
 // delete project
-}elseif($_REQUEST['op'] == "deleteMsg"){ 
-
+} elseif ($_REQUEST['op'] == "deleteMsg") {
     print printProjectContent($_REQUEST['pr_id'],TRUE);
     die(0);
 
- 
-}elseif($_REQUEST['op'] == "delete"){ 
-
+} elseif ($_REQUEST['op'] == "delete") {
     $projs = getProjects_byOwner();
     if (count($projs) < 2){
         // return error
@@ -80,7 +74,7 @@ if ($_REQUEST['op'] == "new"){
     	redirect($GLOBALS['BASEURL']."workspace/");
     }
     $r = deleteProject($_REQUEST['pr_id']);
-    if (!$r){
+    if (!$r) {
         // return error
         $_SESSION['errorData']['Error'][] = "Project cannot be deleted";
     	redirect($GLOBALS['BASEURL']."workspace/");
@@ -91,32 +85,30 @@ if ($_REQUEST['op'] == "new"){
     $_SESSION['errorData']['Info'][] = "Done! Project successfully deleted";
 }
 
-
 //
 // set active project (in SESSION and DB)
- 
-if ($_REQUEST['pr_id']){
+
+if ($_REQUEST['pr_id']) {
     $proj_code="";
-    if (!isset($_REQUEST['pr_code'])){
+    if (!isset($_REQUEST['pr_code'])) {
         $proj_fn   = getAttr_fromGSFileId($_REQUEST['pr_id'],"path");
         $_REQUEST['pr_code']= basename($proj_fn);
-
     }
     // update session
-    $_SESSION['User']['activeProject']= $_REQUEST['pr_code'];
-    $_SESSION['User']['dataDir']      = $_REQUEST['pr_id'];
+    $_SESSION['User']['activeProject'] = $_REQUEST['pr_code'];
+    $_SESSION['User']['dataDir']       = $_REQUEST['pr_id'];
 
     // update User in mongo
     modifyUser($_SESSION['User']['_id'],"activeProject",$_SESSION['User']['activeProject']);
     modifyUser($_SESSION['User']['_id'],"dataDir"      ,$_SESSION['User']['dataDir']);
 
     // print info message
-    if ($_SESSION['User']['dataDir'] != $dataDir_ant){
-        if (!isset($_REQUEST['pr_name'])){$_REQUEST['pr_name']= getAttr_fromGSFileId($_SESSION['User']['dataDir'],"name");}
+    if ($_SESSION['User']['dataDir'] != $dataDir_ant) {
+        if (!isset($_REQUEST['pr_name'])) {
+            $_REQUEST['pr_name']= getAttr_fromGSFileId($_SESSION['User']['dataDir'],"name");
+        }
         $_SESSION['errorData']['Info'][] = "Moving displayed workspace from project <b>'$dataDir_ant_name'</b> to project <b>'".$_REQUEST['pr_name']."'</b>";
     }
 }
 
 redirect($GLOBALS['BASEURL']."workspace/");
-
-?>
