@@ -19,3 +19,5 @@ qconf -as front_end.dockerized_vre
 
 qconf -mconf # change UID from 1000 to 33)
 ```
+### KeyCloak:
+Check match user and secret with keycloak config.

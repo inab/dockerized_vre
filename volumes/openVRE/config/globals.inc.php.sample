@@ -6,10 +6,10 @@
 
 
 // Main config
-$GLOBALS['SERVER']    = http(s)://my_server_FDQN:8089; // url accessible from outside netowrk
+$GLOBALS['SERVER']    = "http(s)://my_server_FDQN:8089"; // url accessible from outside netowrk
 $GLOBALS['BASEURL']   = "/"; // prefix url path. Set "/" for no prefix
 $GLOBALS['AppPrefix'] = "VRE-TEST"; // project url acronym
-$GLOBALS['NAME']      = "Project Name"; // project name 
+$GLOBALS['NAME']      = "Project Name"; // project name
 $GLOBALS['SITETITLE'] = "Project Name | Virtual Research Environment"; // site title
 $GLOBALS['TIMEOUT']   = 3600; // session and cookies timeout
 
@@ -22,7 +22,7 @@ $GLOBALS['ADMINMAIL'] = "admin@mail.es"; // BBC address for VRE ticket emails
 $GLOBALS['queueTask']  = "local.q"; //default queue
 
 // Mongo databases
-$GLOBALS['db_credentials'] = __DIR__."/mongo.conf"; // Mongo access 
+$GLOBALS['db_credentials'] = __DIR__."/mongo.conf"; // Mongo access
 $GLOBALS['dbname_VRE']     = "openVRE"; // Database name
 
 //VRE installation paths TODO create if do not exists
@@ -31,7 +31,7 @@ $GLOBALS['shared']     = "/shared_data/"; // VRE data directory
 $GLOBALS['logFile']    = $GLOBALS['shared']."/logs/application.log"; // Log file path
 $GLOBALS['dataDir']    = $GLOBALS['shared']."userdata/"; // User data directory
 $GLOBALS['pubDir']     = $GLOBALS['shared']."public/"; // Public data directory
-$GLOBALS['sampleData'] = $GLOBALS['shared']."sampleData/"; // Tool dataset directory 
+$GLOBALS['sampleData'] = $GLOBALS['shared']."sampleData/"; // Tool dataset directory
 $GLOBALS['sampleData_default'] = "basic"; // Default workspace's dataset entry
 
 // File manager config
@@ -53,11 +53,11 @@ $GLOBALS['auth_required']          = false; // if set login is required, no anon
 $GLOBALS['auth_credentials']       = __DIR__."/oauth2.conf"; // oauth2 client credentials
 $GLOBALS['authAdmin_credentials']  = __DIR__."/oauth2_admin.conf"; // oauth2 client credentials with admin privileges
 $GLOBALS['authServer']             = 'http://my_server_FDQN:8080/auth'; // internal oauth2 server, replace by external URL if needed
-$GLOBALS['authRealm']              = 'VRE'; // keycloak realm
+$GLOBALS['authRealm']              = 'open-vre'; // keycloak realm
 $GLOBALS['urlAuthorize' ]          = $GLOBALS['authServer'].'/realms/'.$GLOBALS['authRealm'].'/protocol/openid-connect/auth';     //get autorization_code
 $GLOBALS['urlAccessToken']         = $GLOBALS['authServer'].'/realms/'.$GLOBALS['authRealm'].'/protocol/openid-connect/token';    //get token
 $GLOBALS['urlResourceOwnerDetails']= $GLOBALS['authServer'].'/realms/'.$GLOBALS['authRealm'].'/protocol/openid-connect/userinfo'; //get user details
-$GLOBALS['urlLogout']              = $GLOBALS['authServer'].'/realms/'.$GLOBALS['authRealm'].'/protocol/openid-connect/logout';   //close keyclok session   
+$GLOBALS['urlLogout']              = $GLOBALS['authServer'].'/realms/'.$GLOBALS['authRealm'].'/protocol/openid-connect/logout';   //close keyclok session
 $GLOBALS['adminToken']             = $GLOBALS['authServer']."/realms/master/protocol/openid-connect/token"; // get Admin token
 $GLOBALS['adminRealm']             = $GLOBALS['authServer']."/admin/realms/".$GLOBALS['authRealm']; // admin keycloak users
 
@@ -67,7 +67,7 @@ $GLOBALS['adminRealm']             = $GLOBALS['authServer']."/admin/realms/".$GL
 
 
 // Default names and local path for VRE
-$GLOBALS['URL']       = $GLOBALS['SERVER'].$GLOBALS['BASEURL']; // full VRE URL 
+$GLOBALS['URL']       = $GLOBALS['SERVER'].$GLOBALS['BASEURL']; // full VRE URL
 $GLOBALS['URL_login'] = $GLOBALS['URL']."login.php"; // Default for auth server login
 $GLOBALS['htmlPath']  = $GLOBALS['root']. "/public/"; // Default path for public folder
 $GLOBALS['htmlib']    = $GLOBALS['htmlPath']."htmlib"; // Default path for html templates
@@ -129,7 +129,7 @@ $GLOBALS['placeholder_textarea'] = "Click right button to select file(s)"; // te
 
 
 // Cloud infrastructures
-$GLOBALS['cloud']              = "my_on_premises_cloud"; // VRE central cloud. Options are any of $GLOBALS['clouds']
+$GLOBALS['cloud']              = "my_on_premises_docker"; // Dockerized VRE
 $GLOBALS['clouds'] = Array(
 		'my_on_premises_cloud' => array(
 			"http_host"	    => "www.mydomain.com",	     // used in getCurrentCloud
@@ -143,7 +143,15 @@ $GLOBALS['clouds'] = Array(
 			"imageTypes" 	    => array(),                      // list of cloud OCCI templates indexed by RAM (GB)
 			"auth"	            => array("required" => False)
 		),
-
+		'my_on_premises_docker' => array(
+			"http_host"	    => "localhost",
+			"dataDir_fs"        => "/userdata/", // export path for NFS server
+			"pubDir_fs"         => "/public/",   // export path for NFS server
+			"dataDir_virtual"   => $GLOBALS['dataDir'],
+			"pubDir_virtual"    => $GLOBALS['pubDir'],
+			"imageTypes" 	    => array(),
+			"auth"	            => array("required" => False)
+	    ),
 		'my_remote_2' => array(
 			"http_host"	    => "www.mydomain2.com",	      // used in getCurrentCloud
 			"dataDir_fs"   	    => "/NFS/export/path2/userdata/", // export path for NFS server
@@ -175,7 +183,10 @@ $GLOBALS['clouds'] = Array(
 				"COMPUTE_API_VERSION" => "1.2",
 				"OS_USERNAME"    => "username@mail.es",
 				"OS_PASSWORD"    => "s3cr3t",
-				"OS_TENANT_NAME" => "tenancy_name" 
+				"OS_TENANT_NAME" => "tenancy_name"
 			)
-	    )
+		)
 );
+
+# Get host path TODO CHECK docker mounts
+$GLOBALS['host_path'] = trim(file_get_contents($GLOBALS['shared'].".pwd"));

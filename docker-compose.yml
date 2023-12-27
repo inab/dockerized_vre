@@ -35,6 +35,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
       MONGO_INITDB_USERNAME: ${MONGO_INITDB_USERNAME}
       MONGO_INITDB_PASSWORD: ${MONGO_INITDB_PASSWORD}
+      MONGO_PORT: ${MONGO_PORT}
       MONGO_SERVER: ${MONGO_SERVER}
       MONGO_INITDB_DATABASE: ${MONGO_DB}
     volumes:
@@ -55,10 +56,10 @@ services:
        POSTGRES_USER: ${POSTGRES_USER}
        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     networks:
-              open-vre:
-                 ipv4_address: 172.21.0.13 
+      open-vre:
+        ipv4_address: 172.21.0.13
     volumes:
-      - "./volumes/pg_data:/var/lib/postgresql/data" 
+      - ./volumes/pg_data:/var/lib/postgresql/data
 
 
   keycloak:
@@ -73,11 +74,11 @@ services:
         DB_PASSWORD: ${DB_PASSWORD}
         KEYCLOAK_USER: ${KEYCLOAK_USER}
         KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
-        PROXY_ADDRESS_FORWARDING: "true"
+        PROXY_ADDRESS_FORWARDING: "false"
         KEYCLOAK_FRONTEND_URL: ${FQDN_HOST_PROTOCOL}://${FQDN_HOST}:${KEYCLOAK_PORT}/auth
 
     volumes:
-        - "./keycloak/realms:/opt/jboss/keycloak/imports"
+        - ./keycloak/realms:/opt/jboss/keycloak/imports
     command:
             - '-b 0.0.0.0 -Dkeycloak.profile.feature.upload_scripts=enabled -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/opt/jboss/keycloak/imports/realm-export.json -Dkeycloak.migration.strategy=IGNORE_EXISTING'
     ports:
@@ -87,11 +88,15 @@ services:
     networks:
               open-vre:
                 ipv4_address: 172.21.0.12
+    depends_on:
+      - postgres
 
   sgecore:
-    build: 
+    build:
       context: ./sge
       #network: host
+    environment:
+      - DOCKER_GROUP:${DOCKER_GROUP}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./sge:/sge
@@ -121,6 +126,8 @@ services:
       - ./volumes/openVRE/config:/var/www/html/openVRE/config
       - ./volumes/openVRE/tools:/var/www/html/openVRE/public/tools
       - ./volumes/shared_data:/shared_data
+    environment:
+      - DOCKER_GROUP:${DOCKER_GROUP}
     links:
       - my-mongodb
       - keycloak
@@ -136,13 +143,14 @@ services:
 
 networks:
   open-vre:
+    #Use on openStack cloud
     #driver_opts:
     #  com.docker.network.driver.mtu: 1442
     ipam:
       config:
             - subnet: 172.21.0.0/24
 
-              #shared: 
+              #shared:
               #external:
               #name: shared
 
