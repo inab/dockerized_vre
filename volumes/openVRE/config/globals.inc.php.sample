@@ -152,6 +152,17 @@ $GLOBALS['clouds'] = Array(
 			"imageTypes" 	    => array(),
 			"auth"	            => array("required" => False)
 	    ),
+		'my_distributed_docker' => array(
+			"http_host"	    => "localhost",	     // used in getCurrentCloud
+			"dataDir_fs"        => "/userdata/", // export path for NFS server
+			"pubDir_fs"         => "/public/",   // export path for NFS server
+			"rabbit-mq_host" => "localhost",
+			"rabbit-mq_port" => "5361",
+			"dataDir_virtual"   => $GLOBALS['dataDir'],
+			"pubDir_virtual"    => $GLOBALS['pubDir'],
+			"imageTypes" 	    => array(),                      // list of cloud OCCI templates indexed by RAM (GB)
+			"auth"	            => array("required" => False)
+		),
 		'my_remote_2' => array(
 			"http_host"	    => "www.mydomain2.com",	      // used in getCurrentCloud
 			"dataDir_fs"   	    => "/NFS/export/path2/userdata/", // export path for NFS server
