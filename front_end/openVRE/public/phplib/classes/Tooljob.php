@@ -70,6 +70,9 @@ class Tooljob {
                 $this->root_dir_mug      = $GLOBALS['clouds'][$this->cloudName]['dataDir_virtual'];
                 $this->pub_dir_virtual  = $GLOBALS['clouds'][$this->cloudName]['pubDir_virtual'];
                 break;
+            case "docker_RBTMQ": // TODO
+                // TODO remote paths to be resolved on receiver.py
+                break;
             case "PMES":
                 $this->root_dir_virtual = $GLOBALS['clouds'][$this->cloudName]['dataDir_virtual'];
                 $this->pub_dir_virtual  = $GLOBALS['clouds'][$this->cloudName]['pubDir_virtual'];
@@ -790,7 +793,7 @@ class Tooljob {
 			break;
 
 		    case "docker_SGE":
-			$cmd  = $this->setBashCmd_docker_SGE($tool);
+			    $cmd  = $this->setBashCmd_docker_SGE($tool);
                         if (!$cmd)
                                 return 0;
 
@@ -798,6 +801,9 @@ class Tooljob {
                         if (!is_file($submission_rfn))
                                 return 0;
                         break;
+            case "docker_RBTMQ":
+                // TODO
+                // $cmd: prepare command file using FLManager API
 
 		    case "PMES":
 			$json_data = $this->setPMESrequest($tool);
@@ -1112,9 +1118,10 @@ class Tooljob {
 	    switch ($tool['infrastructure']['clouds'][$this->cloudName]['launcher']){
     	    case "SGE":
     	    case "docker_SGE":
+            case "docker_RBTMQ":
     		    return $this->enqueue($tool);
         		break;
-        	    case "PMES":
+        	case "PMES":
     	    	return $this->callPMES();
         		break;
     	    default:

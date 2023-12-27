@@ -2054,7 +2054,7 @@ function resolvePath_toLocalAbsolutePath($path,$job){
 		 $rfn = str_replace($job['root_dir_virtual'],$GLOBALS['dataDir'].$_SESSION['User']['id'],$path);
 
       	     //SGE finds mounted dataDir as root_dir_virtual
-	    }elseif ($job['launcher'] == "SGE" || $job['launcher'] == "docker_SGE"){
+	    }elseif ($job['launcher'] == "SGE" || $job['launcher'] == "docker_SGE"|| $launcherType == "docker_RBTMQ"){
 	   	    $rfn = str_replace($job['root_dir_mug'],$GLOBALS['dataDir'],$path);
 	    }
 	// direct from file_path

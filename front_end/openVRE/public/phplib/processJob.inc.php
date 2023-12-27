@@ -21,7 +21,7 @@ function execJob ($workDir,$shFile,$queue,$cpus=1,$mem=0) {
         logger($errMesg);
         return array(0,$errMesg);
     }
-    
+
     logger("The process $cmd is currently running PID = $pid");
     return array($pid,"");
 }
@@ -97,7 +97,7 @@ function getRunningJobInfo($pid,$launcherType=NULL,$cloudName="local"){
     }
 
     // create new jobProcess
-        if ($launcherType == "SGE" || $launcherType == "docker_SGE"){
+        if ($launcherType == "SGE" || $launcherType == "docker_SGE" || $launcherType == "docker_RBTMQ"){
                 $process = new ProcessSGE();
                 $job = $process->getRunningJobInfo($pid);
 
@@ -133,7 +133,7 @@ function updateLogFromJobInfo($logFile,$pid,$launcherType=NULL,$cloudName="local
             if ( !$F ) {
                         //$_SESSION['errorData']['Warning'][]="Cannot update LOG file '".basename(dirname($logFile))."' ($cloudName). Recently deleted from workspace or not accessible.";
                 return true;
-            } 
+            }
             if ($job['jobOutputMessage']){
                 fwrite($F, "##### STDOUT ###############################\n");
                 fwrite($F, $job['jobOutputMessage']);
@@ -250,7 +250,7 @@ function delJob($pid,$launcherType=NULL,$cloudName="local",$login=NULL){
 
     // cancel job
     $r = false;
-    if ($launcherType == "SGE" || $launcherType == "docker_SGE"){
+    if ($launcherType == "SGE" || $launcherType == "docker_SGE" || $launcherType == "docker_RBTMQ"){
         $process = new ProcessSGE();
         list($r,$msg) = $process->stop($pid);
         if (!$r)
@@ -276,9 +276,9 @@ function delJob($pid,$launcherType=NULL,$cloudName="local",$login=NULL){
     if ($r){
         if (!$login){$login = $_SESSION['User']['_id'];}
         $filesPending= processPendingFiles($login);
-        //delUserJob($login,$pid); // directly deleting job entry leds to no output registration! 
+        //delUserJob($login,$pid); // directly deleting job entry leds to no output registration!
     }else{
-        $_SESSION['errorData']['Internal Error'][] = "Error while cancelling $launcherType job [id = $pid].<br>Job deleted from the system, but not from user metadata"; 
+        $_SESSION['errorData']['Internal Error'][] = "Error while cancelling $launcherType job [id = $pid].<br>Job deleted from the system, but not from user metadata";
         return false;
     }
     return true;
