@@ -9,7 +9,7 @@ RUN \
   apt-get install -y mongodb-org && \
   rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update -y && apt-get upgrade -y && apt-get install git 
+RUN apt-get update -y && apt-get upgrade -y && apt-get install git
 
 # Define working directory.
 WORKDIR /data
@@ -17,9 +17,9 @@ WORKDIR /data
 # Define default command.
 CMD ["mongod --httpinterface"]
 
-# Expose ports.
+# Expose ports. TODO use ${MONGO_PORT}
 EXPOSE 27017
 EXPOSE 28017
 
 
-~                       
+~
