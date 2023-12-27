@@ -7,6 +7,7 @@ apt-get install -y git rsync
 for f in /install_data/database/*.json; do
     mongoimport --host ${MONGO_SERVER} \
                 --db ${MONGO_DB} \
+                --port ${MONGO_PORT} \
                 --collection ${MONGO_INITDB_COLLECTION} \
                 --username ${MONGO_INITDB_ROOT_USERNAME} \
                 --password ${MONGO_INITDB_ROOT_PASSWORD} \
