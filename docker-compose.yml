@@ -24,6 +24,7 @@ services:
     networks:
         open-vre:
             ipv4_address: 172.21.0.10
+
   mongo_seed:
     container_name: mongo_seed
     image: mongo
@@ -46,6 +47,8 @@ services:
       /mongo-seed/import.sh
     networks:
       - open-vre
+    depends_on:
+      - my-mongodb
 
 
   postgres:
@@ -85,9 +88,10 @@ services:
         - ${KEYCLOAK_PORT}:8080
     links:
         - postgres
+    hostname: keycloak
     networks:
-              open-vre:
-                ipv4_address: 172.21.0.12
+      open-vre:
+        ipv4_address: 172.21.0.12
     depends_on:
       - postgres
 
@@ -116,9 +120,9 @@ services:
     container_name: front_end
     hostname: front_end.dockerized_vre_open-vre
     extra_hosts:
-      - "${FQDN_HOST}:172.21.0.1"
+      - ${FQDN_HOST}:172.21.0.1
     build:
-      context: './front_end/'
+      context: ./front_end/
       #network: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
