@@ -19,7 +19,3 @@ CMD ["mongod --httpinterface"]
 
 # Expose ports. TODO use ${MONGO_PORT}
 EXPOSE 27017
-EXPOSE 28017
-
-
-~
