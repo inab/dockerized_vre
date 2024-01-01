@@ -18,9 +18,9 @@ RUN apt-get update -qq ; apt-get upgrade ; \
     apt-get install -y gridengine-client ; \
     apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN apt-get update && apt-get install -y libmcrypt-dev \ 
+RUN apt-get update && apt-get install -y libmcrypt-dev \
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
-    && docker-php-ext-install gd 
+    && docker-php-ext-install gd
 
 RUN apt-get update && apt-get install -y gnupg software-properties-common
 RUN curl -fsSL https://www.mongodb.org/static/pgp/server-4.2.asc | apt-key add -
@@ -44,6 +44,12 @@ RUN mkdir logs
 RUN touch logs/application.log
 RUN chmod -R 777 logs/application.log
 RUN cd public
+
+ADD api /var/www/api
+WORKDIR /var/www/api
+RUN python3 --version
+RUN apt-get install -y python3-pip; pip3 install --upgrade pip
+RUN pip3 install -r requirements.txt
 
 
 ENV WEB_DOCUMENT_ROOT=/var/www/html/openVRE/public/

@@ -2,7 +2,7 @@
 
 apt-get update
 apt-get install -y git rsync
-
+env
 # Import JSON files into MongoDB using environment variables for credentials
 for f in /install_data/database/*.json; do
     mongoimport --host ${MONGO_SERVER} \
@@ -13,7 +13,18 @@ for f in /install_data/database/*.json; do
                 --authenticationDatabase admin \
                 --file $f
 done
+for f in /install_data/FLdatabase/*.json; do
+    mongoimport --host ${MONGO_SERVER} \
+                --db ${MONGO_FLDB} \
+                --port ${MONGO_PORT} \
+                --username ${MONGO_INITDB_ROOT_USERNAME} \
+                --password ${MONGO_INITDB_ROOT_PASSWORD} \
+                --authenticationDatabase admin \
+                --file $f
+done
 
+# Copy rabbitMQ data
+rsync -av --delete /install_data/rabbitmq/* /rabbitmq_data
 # Copy userdata
 rsync -av --delete /install_data/data/userdata /shared_data
 

@@ -13,6 +13,8 @@ services:
       MONGO_PORT: ${MONGO_PORT}
       MONGO_SERVER: ${MONGO_SERVER}
       MONGO_INITDB_DATABASE: ${MONGO_DB}
+      MONGO_FLDB_DATABASE: ${MONGO_FLDB}
+
     ports:
       - ${MONGO_PORT}:27017
     links:
@@ -38,10 +40,12 @@ services:
       MONGO_PORT: ${MONGO_PORT}
       MONGO_SERVER: ${MONGO_SERVER}
       MONGO_INITDB_DATABASE: ${MONGO_DB}
+      MONGO_INITDB_FLDATABASE: ${MONGO_FLDB}
     volumes:
       - ./mongo-seed:/mongo-seed
       - ./volumes/shared_data:/shared_data
-      - ./front_end/openVRE/install:/install_data
+      - ./install_data:/install_data
+      - ./volumes/rabbitmq:/rabbitmq_data
     command:
       /mongo-seed/import.sh
     networks:
@@ -80,7 +84,7 @@ services:
     volumes:
         - ./keycloak/realms:/opt/jboss/keycloak/imports
     command:
-            - '-b 0.0.0.0 -Dkeycloak.profile.feature.upload_scripts=enabled -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/opt/jboss/keycloak/imports/realm-export.json -Dkeycloak.migration.strategy=IGNORE_EXISTING'
+            - '-b 0.0.0.0 -Dkeycloak.profile.feature.upload_scripts=enabled -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/opt/jboss/keycloak/imports/open-vre.json -Dkeycloak.migration.strategy=IGNORE_EXISTING'
     ports:
         - ${KEYCLOAK_PORT}:8080
     links:
@@ -135,10 +139,30 @@ services:
       - sgecore
     ports:
       - "8089:80"
+      - "5000:5000"
     networks:
       #shared:
               open-vre:
                 ipv4_address: 172.21.0.14
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: my-rabbit
+    volumes:
+      - ./volumes/rabbitmq/certificates:/etc/rabbitmq/certs
+      - ./volumes/rabbitmq/etc/definitions.json:/etc/rabbitmq/definitions.json
+      - ./volumes/rabbitmq/conf/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./volumes/rabbitmq/data:/var/lib/rabbitmq/mnesia/rabbit@my-rabbit
+      - ./volumes/rabbitmq/logs:/var/log/rabbitmq/log
+    environment:
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_DEFAULT_VHOST}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+
+    ports:
+      - 5671:5671
+      - 15672:15672
+
+    entrypoint: sh -c "rabbitmq-server & sleep 10; rabbitmq-plugins enable rabbitmq_auth_backend_http ; rabbitmqctl add_user centre1 password && rabbitmqctl set_user_tags centre1 keycloak && rabbitmqctl set_permissions -p rabbit_server centre1 "." "." "." ; rabbitmqctl add_user centre2 password && rabbitmqctl set_user_tags centre2 keycloak && rabbitmqctl set_permissions -p rabbit_server centre2 "." "." "." ; rabbitmqctl add_user centre3 password && rabbitmqctl set_user_tags centre3 keycloak && rabbitmqctl set_permissions -p rabbit_server centre3 "." "." "." ; rabbitmqctl add_user centre4 password && rabbitmqctl set_user_tags centre4 keycloak && rabbitmqctl set_permissions -p rabbit_server centre4 "." "." "." ; rabbitmqctl add_user centre5 password && rabbitmqctl set_user_tags centre5 keycloak && rabbitmqctl set_permissions -p rabbit_server centre5 "." "." "."; rabbitmqctl add_user centre6 password && rabbitmqctl set_user_tags centre6 keycloak && rabbitmqctl set_permissions -p rabbit_server centre6 "." "." "."; rabbitmqctl add_user centre7 password && rabbitmqctl set_user_tags centre7 keycloak && rabbitmqctl set_permissions -p rabbit_server centre7 "." "." "."; rabbitmqctl add_user centre8 password && rabbitmqctl set_user_tags centre8 keycloak && rabbitmqctl set_permissions -p rabbit_server centre8 "." "." "."; rabbitmqctl add_user centre9 DM2023FLcentre9 && rabbitmqctl set_user_tags centre9 keycloak && rabbitmqctl set_permissions -p rabbit_server centre9 "." "." "."; rabbitmqctl add_user centre10 password && rabbitmqctl set_user_tags centre10 keycloak && rabbitmqctl set_permissions -p rabbit_server centre10 "." "." "."; rabbitmqctl add_user user1 password && rabbitmqctl set_user_tags user1 keycloak && rabbitmqctl set_permissions -p rabbit_server user1 "." "." "."; tail -f /dev/null"
 
 
 networks:
@@ -149,11 +173,6 @@ networks:
     ipam:
       config:
             - subnet: 172.21.0.0/24
-
-              #shared:
-              #external:
-              #name: shared
-
 volumes:
   shared_data:
     driver: local
