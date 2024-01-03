@@ -3,10 +3,10 @@ import logging
 import uuid
 from typing import Optional, List
 from fastapi import HTTPException
-from api.send import start_call  # Import the start_call function
+from api.send import sendEngine  # Import the start_call function
 
 
-def get_tool_id_by_name(tool_name: str, tools_collection):
+def get_tool_id_by_name(tools_collection, tool_name: str):
     try:
         #print(f"Searching for tool: {tool_name}")
         tool = tools_collection.find_one({"_id": tool_name})
@@ -17,7 +17,7 @@ def get_tool_id_by_name(tool_name: str, tools_collection):
         raise HTTPException(status_code=500, detail=f"Database error: {e}")
 
 
-def trigger_tool_by_id(tool_id: str, tools_collection, tasks_collection, nodes: Optional[List[str]] = None):
+def trigger_tool_by_id(send_engine, tool_id: str, tools_collection, tasks_collection, nodes: Optional[List[str]] = None):
     try:
         #print(f"Received tool_id: {tool_id}")
         tool_info = read_tool(tool_id, tools_collection, tasks_collection)
@@ -27,7 +27,8 @@ def trigger_tool_by_id(tool_id: str, tools_collection, tasks_collection, nodes: 
         deployment_plan = tool_info.get("deployment_plan", {})
         host_list = nodes or [deployment_plan.get("host_list", "default_node")]
 
-        execution_id = str(uuid.uuid4())
+        send_engine.set_execution_id()
+
         for task in tool_info.get("tasks", []):
             task_id = task.get("task_id")
 
@@ -36,7 +37,7 @@ def trigger_tool_by_id(tool_id: str, tools_collection, tasks_collection, nodes: 
                 print(f"Executing task_id={task_id} on node={task_node}")
 
                 # Call start_call with execution_id, task_id, and task_node
-                result = start_call(execution_id, task_id, tool_id, [task_node])  # Pass [task_node] as a list
+                result = send_engine.start_call(task_id, tool_id, [task_node])  # Pass [task_node] as a list
 
         print(f"Tool execution successful")
         return {"status": "success", "result": result, "tool_info": tool_info, "nodes": host_list}
@@ -80,14 +81,14 @@ def list_tasks(tasks_collection):
 
 
 
-def get_tools():
+def get_tools(tools_collection):
     try:
         tools = list(tools_collection.find())
         return tools
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database error: {e}")
 
-def get_tasks():
+def get_tasks(tasks_collection):
     try:
         tasks = list(tasks_collection.find())
         return tasks
@@ -96,7 +97,7 @@ def get_tasks():
         raise HTTPException(status_code=500, detail="An error occurred while fetching task information.")
 
 
-def get_tool(tool_id):
+def get_tool(tools_collection, tool_id):
     try:
         tool = tools_collection.find_one({'id': tool_id})
         if tool:
@@ -106,7 +107,7 @@ def get_tool(tool_id):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database error: {e}")
 
-def get_task(task_id):
+def get_task(tasks_collection, task_id):
     try:
         task = tasks_collection.find_one({'_id': task_id})
         if task:
@@ -123,7 +124,7 @@ def list_hosts(hosts_collection):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database error: {e}")
 
-def read_host(host_id, hosts_collection):
+def read_host(hosts_collection, host_id):
     try:
         host = hosts_collection.find_one({"_id": host_id})
         if host:
