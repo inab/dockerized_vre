@@ -130,9 +130,13 @@ services:
       - ./volumes/openVRE/config:/var/www/html/openVRE/config
       - ./volumes/openVRE/tools:/var/www/html/openVRE/public/tools
       - ./volumes/shared_data:/shared_data
+      - ./volumes/rabbitmq/certificates:/var/www/api/rabbitmq/certificates
     environment:
-      - DOCKER_GROUP:${DOCKER_GROUP}
+      PYTHONPATH: '/var/www'
+      DOCKER_GROUP: ${DOCKER_GROUP}
+
     links:
+
       - my-mongodb
       - keycloak
     depends_on:

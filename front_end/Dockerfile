@@ -27,6 +27,7 @@ RUN curl -fsSL https://www.mongodb.org/static/pgp/server-4.2.asc | apt-key add -
 RUN add-apt-repository 'deb https://repo.mongodb.org/apt/debian buster/mongodb-org/4.2 main'
 RUN apt-get update
 RUN apt-get install -y mongodb-org
+RUN apt-get install -y python3-pip; pip3 install --upgrade pip
 
 #
 ADD setup.sh /usr/local/bin/setup.sh
@@ -46,21 +47,20 @@ RUN chmod -R 777 logs/application.log
 RUN cd public
 
 ADD api /var/www/api
-WORKDIR /var/www/api
-RUN python3 --version
-RUN apt-get install -y python3-pip; pip3 install --upgrade pip
-RUN pip3 install -r requirements.txt
-
+RUN ln -s /var/www/html/openVRE/config/config.ini /var/www
+RUN pip3 install -r /var/www/api/requirements.txt
 
 ENV WEB_DOCUMENT_ROOT=/var/www/html/openVRE/public/
 WORKDIR /var/www/html/openVRE/public
 RUN pwd
-EXPOSE 88 443
+EXPOSE 88 443 5000
 
 #RUN useradd -m application
 #RUN echo "application:application" | chpasswd
 
-CMD /opt/docker/bin/entrypoint.sh supervisord
+ADD entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+CMD /entrypoint.sh
 
 
 #add cleaning step adjusting the document + sistema de cues

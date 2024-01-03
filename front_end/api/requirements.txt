@@ -1,0 +1,10 @@
+pymongo
+pytest-cov
+pytest
+fastapi
+pydantic
+uvicorn
+pika
+amqpstorm
+requests
+python-multipart
