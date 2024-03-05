@@ -61,6 +61,10 @@ $GLOBALS['urlLogout']              = $GLOBALS['authServer'].'/realms/'.$GLOBALS[
 $GLOBALS['adminToken']             = $GLOBALS['authServer']."/realms/master/protocol/openid-connect/token"; // get Admin token
 $GLOBALS['adminRealm']             = $GLOBALS['authServer']."/admin/realms/".$GLOBALS['authRealm']; // admin keycloak users
 
+// Distributed exec API
+$GLOBALS['FLAPIPrefix'] = "http(s)://my_server_FDQN:5000/flmanager/API/v1";
+$GLOBALS['FLAPIOauth'] = false;
+
 /************************
 // Definitions
 ************************/

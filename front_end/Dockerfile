@@ -28,7 +28,8 @@ RUN add-apt-repository 'deb https://repo.mongodb.org/apt/debian buster/mongodb-o
 RUN apt-get update
 RUN apt-get install -y mongodb-org
 RUN apt-get install -y python3-pip; pip3 install --upgrade pip
-
+ADD api/requirements.txt /var/www/api/requirements.txt
+RUN pip3 install -r /var/www/api/requirements.txt
 #
 ADD setup.sh /usr/local/bin/setup.sh
 RUN chmod +x /usr/local/bin/setup.sh
@@ -45,10 +46,8 @@ RUN mkdir logs
 RUN touch logs/application.log
 RUN chmod -R 777 logs/application.log
 RUN cd public
-
-ADD api /var/www/api
 RUN ln -s /var/www/html/openVRE/config/config.ini /var/www
-RUN pip3 install -r /var/www/api/requirements.txt
+ADD api /var/www/api
 
 ENV WEB_DOCUMENT_ROOT=/var/www/html/openVRE/public/
 WORKDIR /var/www/html/openVRE/public
